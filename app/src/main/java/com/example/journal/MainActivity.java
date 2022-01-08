@@ -85,8 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("TEST", parent.getSelectedItem().toString());
-
                 // Вот здесь хз, как лучше. С одной стороны, более оптимально использовать число
                 // С другой, использование текста на выбранном элементе было бы более универсально
                 switch (position){
@@ -101,8 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Вот он, этот метод. В дальнейшем буду править
-                Log.d("TEST", Integer.toString(parent.getSelectedItemPosition()));
+
             }
         });
 

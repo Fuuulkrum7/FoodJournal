@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Journal</string>
+    <string name="Dish">Блюдо:</string>
+    <string name="Mass">Масса/объем</string>
+    <string name="getButton">Просмотр данных</string>
+    <string name="addButton">Добавить</string>
+    <string name="sortTag">Выбрать по:</string>
+    <string-array name="EatingTimes">
+        <item>Завтрак</item>
+        <item>Обед</item>
+        <item>Ужин</item>
+        <item>Прочее</item>
+    </string-array>
+    <string-array name="sortKeys">
+        <item>Не важно</item>
+        <item>Дате</item>
+    </string-array>
+</resources>

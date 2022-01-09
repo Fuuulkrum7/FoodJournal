@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/eatingName"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="815dp"
+        android:background="#FFC107"
+        android:gravity="center_vertical"
+        android:text="Завтрак"
+        android:textColor="#976001"
+        android:textSize="24sp"
+        android:textStyle="normal" />
+
+    <Button
+        android:id="@+id/addNewDish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="4dp"
+        android:background="#FFFFFF"
+        android:text="Добавить"
+        android:textColor="#976001"
+
+        android:textSize="16sp"
+        app:backgroundTint="@android:color/transparent"
+        app:cornerRadius="8dp"
+        app:rippleColor="#FDAAAAAA"
+        app:strokeColor="#000000"
+        app:strokeWidth="2dp" />
+
+    <LinearLayout
+        android:id="@+id/dishContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/downBorder"
+        android:layout_width="match_parent"
+        android:layout_height="11dp"
+        android:layout_below="@+id/dishContainer"
+        android:layout_alignBottom="@+id/eatingName"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="-10dp"
+        android:background="#FFC107" />
+
+</RelativeLayout>

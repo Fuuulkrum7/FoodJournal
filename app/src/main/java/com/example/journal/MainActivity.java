@@ -2,23 +2,24 @@ package com.example.journal;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // Некоторые статические перемнные, в частности контекст и разное время птитания
@@ -106,6 +107,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Сохраняем "приемы" пищи в список.
         // Ну вот не получается получить в другом классе ресурсы из String.xml
         eating_values = getResources().getStringArray(R.array.EatingTimes);
+        TypedArray bgColors = getResources().obtainTypedArray(R.array.EatingBgColors);
+        TypedArray textColors = getResources().obtainTypedArray(R.array.EatingTextColors);
+        FragmentManager fragMan = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragMan.beginTransaction();
+
+        for (int i = 0; i < eating_values.length; i++) {
+            EatingFragment eatingFragment = EatingFragment.newInstance(
+                    eating_values[i],
+                    bgColors.getColor(i, 0),
+                    textColors.getColor(i, 0)
+            );
+
+            fragmentTransaction.add(R.id.eatingLayout, eatingFragment);
+        }
+
+        fragmentTransaction.commit();
     }
 
     @Override

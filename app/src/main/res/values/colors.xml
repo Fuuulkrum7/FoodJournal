@@ -7,4 +7,18 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <array name="EatingBgColors">
+        <item>#FFC107</item>
+        <item>#00C62B</item>
+        <item>#00C7FA</item>
+        <item>#FD3C3C</item>
+    </array>
+
+    <array name="EatingTextColors">
+        <item>#976001</item>
+        <item>#000000</item>
+        <item>#000000</item>
+        <item>#000000</item>
+    </array>
 </resources>

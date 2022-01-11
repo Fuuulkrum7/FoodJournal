@@ -21,6 +21,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // Некоторые статические перемнные, в частности контекст и разное время птитания
     private static Context context;
@@ -169,12 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ArrayAdapter adapter = (ArrayAdapter) sortKey.getAdapter();
                 int position = adapter.getPosition(key);
 
-                // Добавляем данные в бд
-                result.setText(
-                        database.GetDishes(
-                            position
-                        )
-                );
+                Map dishes = database.GetDishes(position);
                 break;
         }
     }

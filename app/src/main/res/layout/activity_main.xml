@@ -85,7 +85,7 @@
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="65dp"
-                android:layout_height="wrap_content"
+                android:layout_height="44dp"
                 android:layout_weight="0.45"
                 android:text="@string/sortTag"
                 android:textSize="20sp" />

@@ -10,8 +10,13 @@ import android.util.Log;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class DatabaseInterface extends SQLiteOpenHelper {
     // Данные по бд
@@ -82,7 +87,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     }
 
     // Соответсвтвенно, получем блюда
-    public String GetDishes(int key){
+    public Map GetDishes(int key){
         SQLiteDatabase db = this.getReadableDatabase();
 
         // Зададим условие для выборки - список столбцов
@@ -130,7 +135,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
 
             toast.show();
 
-            return "";
+            return new HashMap();
         }
 
         // Узнаем индекс каждого столбца
@@ -140,49 +145,81 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         int dateColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_DATE);
         int timeColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_TIME);
 
-        StringBuilder result = new StringBuilder();
+        // Словарь, оно же хеш-таблица для наших данных
+        Map result = new HashMap<String, Map>();
+        String[] eating = MainActivity.getEating_values();
+
         String _date = "";
         String _eating = "";
-        String[] eating = MainActivity.getEating_values();
+        Map eatingResult = new HashMap<String, List<Map>>();
+        List<Map> dishResult = new ArrayList<Map>();
 
         // Пока в запросе ещё что-то есть
         while(cursor.moveToNext()) {
             // Получаем данные из запроса
             String currentDish = cursor.getString(dishColumnIndex);
-            int currentMass = cursor.getInt(massColumnIndex);
+            String currentMass = Integer.toString(cursor.getInt(massColumnIndex));
             String currentEating = eating[cursor.getInt(eatingColumnIndex)];
             String currentDate = cursor.getString(dateColumnIndex);
             String currentTime = cursor.getString(timeColumnIndex);
 
-            // Если данные начались за след. день
+            if (_date.length() == 0){
+                _date = currentDate;
+            }
+            if (_eating.length() == 0){
+                _eating = currentEating;
+            }
+
             if (! _date.equals(currentDate)){
                 _date = currentDate;
-                result.append("\n********************\n")
-                        .append(currentDate)
-                        .append("\n********************\n");
+                result.put(_date, eatingResult);
+                eatingResult.clear();
             }
 
-            // Если данные за другой прием пищи
             if (! _eating.equals(currentEating)){
                 _eating = currentEating;
-                result.append("\n====================\n")
-                        .append(currentEating)
-                        .append("\n====================\n");
+                eatingResult.put(_eating, dishResult);
+                // Эта зараза при использовании clear чистит все и в словаре
+                dishResult = new ArrayList<Map>();
             }
 
-            // Добаляем прочие данные
-            result.append("Блюдо:").append(currentDish).append("\n")
-                    .append("Масса:").append(currentMass).append("\n")
-                    .append("Время добавления:").append(currentTime)
-                    .append("\n\n");
+            Log.d("TEST", currentEating);
+            Map dishData = new HashMap<String, String>();
+
+            dishData.put("dish", currentDish);
+            dishData.put("mass", currentMass);
+            dishData.put("time", currentTime);
+
+            dishResult.add(dishData);
         }
 
         // Закрываем курсор
         cursor.close();
 
-        result.append("\n" + "********************\n");
+
 
         // Возвращаем строку. Использовать StringBuilder посоветовала IDE
-        return result.toString();
+        return result;
     }
+
+    /*
+    Выглядит так
+
+    {
+    "ДАТА": {
+            "ТЕКУЩЕЕ ВРЕМЯ ПРИЕМА ЕДЫ": [
+                {
+                    "dish": "борщ",
+                    "mass": "300",
+                    "time": "20:10:23"
+                },
+                {
+                    "dish": "Чай",
+                    "mass": "350",
+                    "time": "01.12.59"
+                }
+            ]
+        }
+    }
+     */
 }

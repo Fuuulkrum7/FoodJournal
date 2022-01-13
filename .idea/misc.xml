@@ -3,6 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/drawable/home_icon.xml" value="0.21770833333333334" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.3828125" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.22135416666666666" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/drawable/ic_launcher_background.xml" value="0.22135416666666666" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/layout/activity_navigation.xml" value="0.36666666666666664" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/layout/eating_fragment.xml" value="0.17831813576494426" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/layout/fragment_friends.xml" value="0.20520833333333333" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/layout/fragment_home.xml" value="0.20520833333333333" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/layout/fragment_search.xml" value="0.20520833333333333" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/layout/fragment_settings.xml" value="0.36666666666666664" />
+        <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/eatig_fragment.xml" value="0.22269736842105264" />
         <entry key="app/src/main/res/layout/eating_fragment.xml" value="0.5" />

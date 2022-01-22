@@ -2,10 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/eatingName"
+        android:id="@+id/breakfastBorder"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_alignParentTop="true"
@@ -19,7 +19,7 @@
         android:textStyle="normal" />
 
     <Button
-        android:id="@+id/addNewDish"
+        android:id="@+id/addNewDish1"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
         app:strokeWidth="2dp" />
 
     <LinearLayout
-        android:id="@+id/dishContainer"
+        android:id="@+id/lunchContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
@@ -57,14 +57,15 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
+            android:minHeight="48dp"
             android:text="Name" />
     </LinearLayout>
 
     <View
-        android:id="@+id/downBorder"
+        android:id="@+id/downBorder1"
         android:layout_width="match_parent"
         android:layout_height="14dp"
-        android:layout_below="@+id/dishContainer"
+        android:layout_below="@+id/lunchContainer"
         android:layout_marginTop="0dp"
         android:background="#FFC107" />
 

@@ -11,10 +11,6 @@
         <item>Ужин</item>
         <item>Прочее</item>
     </string-array>
-    <string-array name="sortKeys">
-        <item>Не важно</item>
-        <item>Дате</item>
-    </string-array>
     <string name="title_activity_navigation">NavigationActivity</string>
     <string name="title_home">Главная</string>
     <string name="title_search">Поиск</string>

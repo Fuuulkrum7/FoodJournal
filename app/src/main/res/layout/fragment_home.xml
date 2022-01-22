@@ -8,120 +8,12 @@
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
-
-        <EditText
-            android:id="@+id/Dish"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="@string/Dish"
-            android:importantForAutofill="no"
-            android:inputType="textPersonName"
-            android:minHeight="48dp" />
-
-        <LinearLayout
-            android:id="@+id/InputField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/Mass"
-                android:layout_width="wrap_content"
-                android:minHeight="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/Mass"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                tools:ignore="TextContrastCheck" />
-
-            <Spinner
-                android:id="@+id/Eating"
-                android:layout_width="wrap_content"
-                android:minHeight="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:entries="@array/EatingTimes" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/AddDish"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:minHeight="48dp"
-            android:text="@string/addButton"
-            tools:ignore="TouchTargetSizeCheck" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#959595" />
-
-        <Button
-            android:id="@+id/GetItems"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:minHeight="48dp"
-            android:text="@string/getButton" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="65dp"
-                android:layout_height="44dp"
-                android:minHeight="44dp"
-                android:layout_weight="0.45"
-                android:text="@string/sortTag"
-                android:textSize="20sp" />
-
-            <Spinner
-                android:id="@+id/SortKey"
-                android:layout_width="165dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.55"
-                android:entries="@array/sortKeys"
-                android:minHeight="48dp" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#959595" />
-
-    </LinearLayout>
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:layout_weight="0.5"
+        android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -134,10 +26,238 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/Result"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/breakfast"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/breakfastBorder"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="#FFC107"
+                    android:gravity="center_vertical"
+                    android:text="Завтрак"
+                    android:textColor="#976001"
+                    android:textSize="24sp"
+                    android:textStyle="normal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/addNewBreakfast"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#FFFFFF"
+
+                    android:text="Добавить"
+                    android:textColor="#976001"
+                    android:textSize="16sp"
+                    app:backgroundTint="@android:color/transparent"
+                    app:cornerRadius="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:rippleColor="#FDAAAAAA"
+                    app:strokeColor="#000000"
+                    app:strokeWidth="2dp" />
+
+                <LinearLayout
+                    android:id="@+id/breakfastContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/breakfastBorder"></LinearLayout>
+
+                <View
+                    android:id="@+id/downBorderBreakfast"
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:background="#FFC107"
+                    app:layout_constraintTop_toBottomOf="@+id/breakfastContainer" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lunch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/lunchBorder"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:background="#00C62B"
+                    android:gravity="center_vertical"
+                    android:text="Обед"
+                    android:textColor="#007519"
+                    android:textSize="24sp"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TextContrastCheck" />
+
+
+                <Button
+                    android:id="@+id/addNewLunch"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+
+                    android:layout_marginEnd="8dp"
+                    android:background="#FFFFFF"
+                    android:text="Добавить"
+                    android:textColor="#007519"
+                    android:textSize="16sp"
+                    app:backgroundTint="@android:color/transparent"
+                    app:cornerRadius="8dp"
+                    app:layout_constraintEnd_toEndOf="@+id/lunchBorder"
+                    app:layout_constraintTop_toTopOf="@+id/lunchBorder"
+                    app:rippleColor="#FDAAAAAA"
+                    app:strokeColor="#000000"
+                    app:strokeWidth="2dp" />
+
+                <LinearLayout
+                    android:id="@+id/lunchContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/lunchBorder"></LinearLayout>
+
+                <View
+                    android:id="@+id/downBorderLunch"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:background="#00C62B"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lunchContainer" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/dinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/dinnerBorder"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="#00C7FA"
+                    android:gravity="center_vertical"
+                    android:text="Завтрак"
+                    android:textColor="#007C9C"
+                    android:textSize="24sp"
+                    android:textStyle="normal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TextContrastCheck" />
+
+                <Button
+                    android:id="@+id/addNewDinner"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#FFFFFF"
+
+                    android:text="Добавить"
+                    android:textColor="#007C9C"
+                    android:textSize="16sp"
+                    app:backgroundTint="@android:color/transparent"
+                    app:cornerRadius="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:rippleColor="#FDAAAAAA"
+                    app:strokeColor="#000000"
+                    app:strokeWidth="2dp" />
+
+                <LinearLayout
+                    android:id="@+id/dinnerContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/dinnerBorder"></LinearLayout>
+
+                <View
+                    android:id="@+id/downBorderDinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:background="#00C7FA"
+                    app:layout_constraintTop_toBottomOf="@+id/dinnerContainer" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/other"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/otherBorder"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:background="#FD3C3C"
+                    android:gravity="center_vertical"
+                    android:text="Обед"
+                    android:textColor="#751B1B"
+                    android:textSize="24sp"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TextContrastCheck" />
+
+
+                <Button
+                    android:id="@+id/addNewOther"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+
+                    android:layout_marginEnd="8dp"
+                    android:background="#FFFFFF"
+                    android:text="Добавить"
+                    android:textColor="#751B1B"
+                    android:textSize="16sp"
+                    app:backgroundTint="@android:color/transparent"
+                    app:cornerRadius="8dp"
+                    app:layout_constraintEnd_toEndOf="@+id/otherBorder"
+                    app:layout_constraintTop_toTopOf="@+id/otherBorder"
+                    app:rippleColor="#FDAAAAAA"
+                    app:strokeColor="#000000"
+                    app:strokeWidth="2dp" />
+
+                <LinearLayout
+                    android:id="@+id/otherContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/otherBorder"></LinearLayout>
+
+                <View
+                    android:id="@+id/downBorderOther"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:background="#FD3C3C"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/otherContainer" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

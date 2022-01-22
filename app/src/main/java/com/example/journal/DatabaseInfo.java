@@ -10,15 +10,18 @@ final class DatabaseInfo implements BaseColumns {
     public static final String COLUMN_EATING = "eating";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_TIME = "time";
+    public static final String COLUMN_TIME_ADD = "time_add";
+    public static final String COLUMN_CALORIES = "calories";
 
     static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + " (" +
-                    _ID + " INTEGER PRIMARY KEY, " +
                     COLUMN_DISH + " TEXT, " +
                     COLUMN_MASS + " INTEGER, " +
                     COLUMN_EATING + " INTEGER, " +
+                    COLUMN_CALORIES + " TEXT, " +
                     COLUMN_DATE + " TEXT, " +
-                    COLUMN_TIME + " TEXT)";
+                    COLUMN_TIME + " TEXT, " +
+                    COLUMN_TIME_ADD + " TEXT)";
 
     static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_NAME;

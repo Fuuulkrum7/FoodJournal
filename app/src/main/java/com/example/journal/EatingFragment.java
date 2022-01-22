@@ -50,16 +50,16 @@ public class EatingFragment extends Fragment {
         View view = inflater.inflate(R.layout.eating_fragment,
                 container,false);
 
-        eatingText = (TextView) view.findViewById(R.id.eatingName);
+        eatingText = (TextView) view.findViewById(R.id.breakfastBorder);
         eatingText.setText(eatingName);
         eatingText.setTextColor(textColor);
         eatingText.setBackgroundColor(bgColor);
 
-        View line = (View) view.findViewById(R.id.downBorder);
+        View line = (View) view.findViewById(R.id.downBorder1);
         line.setBackgroundColor(bgColor);
 
-        addDish = (Button) view.findViewById(R.id.addNewDish);
-        dishContainer = (LinearLayout) view.findViewById(R.id.dishContainer);
+        addDish = (Button) view.findViewById(R.id.addNewDish1);
+        dishContainer = (LinearLayout) view.findViewById(R.id.lunchContainer);
 
         addDish.setTextColor(textColor);
 

@@ -1,6 +1,7 @@
 package com.example.journal;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -28,6 +29,8 @@ import android.widget.Toast;
 import com.example.journal.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -39,10 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public DatabaseInterface database;
 
     // А здесь лежат нужные нам элементы интерфейса
-    Spinner eating, sortKey;
-    Button addItem, getItem;
-    EditText dish, mass;
-    TextView result;
+    Button addBreakfast, addLunch, addDinner, addOther;
+    LinearLayout breakfastContainer, lunchContainer, dinnerContainer, otherContainer;
 
     // Индекс выбранного времени пищи (дабы сразу при выборе его сохранять в таком виде)
     // Как-никак, в бд значение этой переменной является числом для удобства сортировки
@@ -76,16 +77,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         database = new DatabaseInterface(getContext());
 
         // Получаем все и вся
-        eating = (Spinner) findViewById(R.id.Eating);
-        sortKey = (Spinner) findViewById(R.id.SortKey);
-
-        addItem = (Button) findViewById(R.id.AddDish);
-        getItem = (Button) findViewById(R.id.GetItems);
+        breakfastContainer = (LinearLayout) findViewById(R.id.breakfastContainer);
+        lunchContainer = (LinearLayout) findViewById(R.id.lunchContainer);
+        dinnerContainer = (LinearLayout) findViewById(R.id.dinnerContainer);
+        otherContainer = (LinearLayout) findViewById(R.id.otherContainer);
 
         dish = (EditText) findViewById(R.id.Dish);
         mass = (EditText) findViewById(R.id.Mass);
 
         result = (TextView) findViewById(R.id.Result);
+
+        Date date1 = new Date();
+        String date = (new SimpleDateFormat("dd.MM.yyyy")).format(date1);
+
+        database.GetDishes(date);
 
         // Ставим прослушку на кнопки
         addItem.setOnClickListener(this);
@@ -182,18 +187,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     toast.show();
                 }
 
-                break;
-
-            // Если нажата кнопка выбрать блюда
-            case R.id.GetItems:
-                // Получаем ключ для выборки
-                String key = sortKey.getSelectedItem().toString();
-
-                // Получаем позицию ключа
-                ArrayAdapter adapter = (ArrayAdapter) sortKey.getAdapter();
-                int position = adapter.getPosition(key);
-
-                Map dishes = database.GetDishes(position);
                 break;
         }
     }

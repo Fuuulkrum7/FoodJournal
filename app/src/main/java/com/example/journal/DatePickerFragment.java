@@ -48,10 +48,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         // Если окно нужно было для получения даты для выборки в бд
         if (id == R.id.SortKey){
             month += 1;
-            // Ставим дату в бд
-            database.setDate(String.format("%d%d.%d%d.%d", day / 10, day % 10,
-                    month / 10, month % 10,
-                    year));
         }
     }
 }

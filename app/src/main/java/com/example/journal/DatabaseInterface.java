@@ -23,8 +23,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "LocalJournal.db";
 
-    // Заготовка под дату. Не очень нравится, но это лучше, чем статичная переменная
-    private String date = "";
+    private MainActivity mainActivity;
 
     // Инициализация, ничего интересного
     public DatabaseInterface(Context context){
@@ -42,11 +41,6 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DatabaseInfo.SQL_DELETE_ENTRIES);
         onCreate(db);
-    }
-
-    // Сеттер для даты
-    public void setDate(String date){
-        this.date = date;
     }
 
     // Добавляем блюдо в бд
@@ -87,27 +81,58 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     }
 
     // Соответсвтвенно, получем блюда
-    public Map GetDishes(int key){
+    public void GetDishes(String date){
         SQLiteDatabase db = this.getReadableDatabase();
+        GetDish getDish = new GetDish(date, db);
+        getDish.start();
+    }
+
+    /*
+    Выглядит так
+
+    {
+    "ДАТА": {
+            "ТЕКУЩЕЕ ВРЕМЯ ПРИЕМА ЕДЫ": [
+                {
+                    "dish": "борщ",
+                    "mass": "300",
+                    "time": "20:10:23"
+                },
+                {
+                    "dish": "Чай",
+                    "mass": "350",
+                    "time": "01.12.59"
+                }
+            ]
+        }
+    }
+     */
+}
+
+class GetDish extends Thread{
+    String date;
+    SQLiteDatabase db;
+
+    public GetDish(String date, SQLiteDatabase db){
+        this.date = date;
+        this.db = db;
+    }
+    @Override
+    public void run(){
 
         // Зададим условие для выборки - список столбцов
         String[] projection = {
-                        DatabaseInfo.COLUMN_DISH,
-                        DatabaseInfo.COLUMN_MASS,
-                        DatabaseInfo.COLUMN_EATING,
-                        DatabaseInfo.COLUMN_DATE,
-                        DatabaseInfo.COLUMN_TIME
+                DatabaseInfo.COLUMN_DISH,
+                DatabaseInfo.COLUMN_MASS,
+                DatabaseInfo.COLUMN_EATING,
+                DatabaseInfo.COLUMN_DATE,
+                DatabaseInfo.COLUMN_TIME
         };
 
-        // Формируем строку-выборку
-        String selection = "";
 
-        // Если нужна выборка по дате
-        if (key == 1)
-            selection = DatabaseInfo.COLUMN_DATE + " = '" + date + "'";
-        // Если нужна выборка по времени приема пищи
-        else if (key == 2)
-            selection = DatabaseInfo.COLUMN_EATING;
+
+        // Формируем строку-выборку
+        String selection = DatabaseInfo.COLUMN_DATE + " = '" + date + "'";
 
         // Порядок сортировки. Сгачала сортируем по дате, а потом уже по еде
         String sortOrder =
@@ -119,7 +144,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
             cursor = db.query(
                     DatabaseInfo.TABLE_NAME,
                     projection,
-                    key == 0 ? null : selection,
+                    selection,
                     null,
                     null,
                     null,
@@ -135,7 +160,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
 
             toast.show();
 
-            return new HashMap();
+            return;
         }
 
         // Узнаем индекс каждого столбца
@@ -195,31 +220,5 @@ public class DatabaseInterface extends SQLiteOpenHelper {
 
         // Закрываем курсор
         cursor.close();
-
-
-
-        // Возвращаем строку. Использовать StringBuilder посоветовала IDE
-        return result;
     }
-
-    /*
-    Выглядит так
-
-    {
-    "ДАТА": {
-            "ТЕКУЩЕЕ ВРЕМЯ ПРИЕМА ЕДЫ": [
-                {
-                    "dish": "борщ",
-                    "mass": "300",
-                    "time": "20:10:23"
-                },
-                {
-                    "dish": "Чай",
-                    "mass": "350",
-                    "time": "01.12.59"
-                }
-            ]
-        }
-    }
-     */
 }

@@ -46,7 +46,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/addNewBreakfast"
+                    android:id="@+id/addBreakfast"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -70,13 +70,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/breakfastBorder"></LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/breakfastBorder"/>
 
                 <View
                     android:id="@+id/downBorderBreakfast"
                     android:layout_width="match_parent"
-                    android:layout_height="14dp"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="2dp"
                     android:background="#FFC107"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/breakfastContainer" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -105,7 +108,7 @@
 
 
                 <Button
-                    android:id="@+id/addNewLunch"
+                    android:id="@+id/addLunch"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -129,12 +132,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/lunchBorder"></LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/lunchBorder"/>
 
                 <View
                     android:id="@+id/downBorderLunch"
                     android:layout_width="match_parent"
                     android:layout_height="8dp"
+                    android:layout_marginTop="2dp"
                     android:background="#00C62B"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -154,7 +158,7 @@
                     android:layout_height="56dp"
                     android:background="#00C7FA"
                     android:gravity="center_vertical"
-                    android:text="Завтрак"
+                    android:text="Ужин"
                     android:textColor="#007C9C"
                     android:textSize="24sp"
                     android:textStyle="normal"
@@ -163,7 +167,7 @@
                     tools:ignore="TextContrastCheck" />
 
                 <Button
-                    android:id="@+id/addNewDinner"
+                    android:id="@+id/addDinner"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -187,13 +191,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/dinnerBorder"></LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/dinnerBorder"/>
 
                 <View
                     android:id="@+id/downBorderDinner"
                     android:layout_width="match_parent"
-                    android:layout_height="14dp"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="2dp"
                     android:background="#00C7FA"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/dinnerContainer" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -210,7 +217,7 @@
                     android:layout_height="56dp"
                     android:background="#FD3C3C"
                     android:gravity="center_vertical"
-                    android:text="Обед"
+                    android:text="Прочее"
                     android:textColor="#751B1B"
                     android:textSize="24sp"
                     android:textStyle="normal"
@@ -222,7 +229,7 @@
 
 
                 <Button
-                    android:id="@+id/addNewOther"
+                    android:id="@+id/addOther"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -246,12 +253,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/otherBorder"></LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/otherBorder"/>
 
                 <View
                     android:id="@+id/downBorderOther"
                     android:layout_width="match_parent"
                     android:layout_height="8dp"
+                    android:layout_marginTop="2dp"
                     android:background="#FD3C3C"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

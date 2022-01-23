@@ -23,8 +23,6 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "LocalJournal.db";
 
-    private MainActivity mainActivity;
-
     // Инициализация, ничего интересного
     public DatabaseInterface(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -81,41 +79,22 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     }
 
     // Соответсвтвенно, получем блюда
-    public void GetDishes(String date){
+    public void GetDishes(String date, EatingFragmentsController controller){
         SQLiteDatabase db = this.getReadableDatabase();
-        GetDish getDish = new GetDish(date, db);
+        GetDish getDish = new GetDish(date, db, controller);
         getDish.start();
     }
-
-    /*
-    Выглядит так
-
-    {
-    "ДАТА": {
-            "ТЕКУЩЕЕ ВРЕМЯ ПРИЕМА ЕДЫ": [
-                {
-                    "dish": "борщ",
-                    "mass": "300",
-                    "time": "20:10:23"
-                },
-                {
-                    "dish": "Чай",
-                    "mass": "350",
-                    "time": "01.12.59"
-                }
-            ]
-        }
-    }
-     */
 }
 
 class GetDish extends Thread{
     String date;
     SQLiteDatabase db;
+    EatingFragmentsController controller;
 
-    public GetDish(String date, SQLiteDatabase db){
+    public GetDish(String date, SQLiteDatabase db, EatingFragmentsController controller){
         this.date = date;
         this.db = db;
+        this.controller = controller;
     }
     @Override
     public void run(){
@@ -125,7 +104,6 @@ class GetDish extends Thread{
                 DatabaseInfo.COLUMN_DISH,
                 DatabaseInfo.COLUMN_MASS,
                 DatabaseInfo.COLUMN_EATING,
-                DatabaseInfo.COLUMN_DATE,
                 DatabaseInfo.COLUMN_TIME
         };
 
@@ -167,16 +145,13 @@ class GetDish extends Thread{
         int dishColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_DISH);
         int massColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_MASS);
         int eatingColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_EATING);
-        int dateColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_DATE);
         int timeColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_TIME);
 
         // Словарь, оно же хеш-таблица для наших данных
         Map result = new HashMap<String, Map>();
-        String[] eating = MainActivity.getEating_values();
+        String[] eating = controller.eating;
 
-        String _date = "";
         String _eating = "";
-        Map eatingResult = new HashMap<String, List<Map>>();
         List<Map> dishResult = new ArrayList<Map>();
 
         // Пока в запросе ещё что-то есть
@@ -185,25 +160,15 @@ class GetDish extends Thread{
             String currentDish = cursor.getString(dishColumnIndex);
             String currentMass = Integer.toString(cursor.getInt(massColumnIndex));
             String currentEating = eating[cursor.getInt(eatingColumnIndex)];
-            String currentDate = cursor.getString(dateColumnIndex);
             String currentTime = cursor.getString(timeColumnIndex);
 
-            if (_date.length() == 0){
-                _date = currentDate;
-            }
             if (_eating.length() == 0){
                 _eating = currentEating;
             }
 
-            if (! _date.equals(currentDate)){
-                _date = currentDate;
-                result.put(_date, eatingResult);
-                eatingResult.clear();
-            }
-
             if (! _eating.equals(currentEating)){
                 _eating = currentEating;
-                eatingResult.put(_eating, dishResult);
+                result.put(_eating, dishResult);
                 // Эта зараза при использовании clear чистит все и в словаре
                 dishResult = new ArrayList<Map>();
             }
@@ -220,5 +185,26 @@ class GetDish extends Thread{
 
         // Закрываем курсор
         cursor.close();
+
+        controller.SetData(result);
     }
 }
+
+/*
+    Выглядит так
+
+    {
+    ""ТЕКУЩЕЕ ВРЕМЯ ПРИЕМА ЕДЫ": [
+            {
+                "dish": "борщ",
+                "mass": "300",
+                "time": "20:10:23"
+            },
+            {
+                "dish": "Чай",
+                "mass": "350",
+                "time": "01.12.59"
+            }
+        ]
+    }
+*/

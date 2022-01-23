@@ -1,9 +1,7 @@
 package com.example.journal;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -14,16 +12,10 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.Debug;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.journal.databinding.ActivityMainBinding;
@@ -31,19 +23,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     // Некоторые статические перемнные, в частности контекст и разное время птитания
     private static Context context;
-    private static String[] eating_values;
 
     // Интерфейс для работы с бд
     public DatabaseInterface database;
-
-    // А здесь лежат нужные нам элементы интерфейса
-    Button addBreakfast, addLunch, addDinner, addOther;
-    LinearLayout breakfastContainer, lunchContainer, dinnerContainer, otherContainer;
 
     // Индекс выбранного времени пищи (дабы сразу при выборе его сохранять в таком виде)
     // Как-никак, в бд значение этой переменной является числом для удобства сортировки
@@ -73,87 +59,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Сохраняем контекст
         MainActivity.context = getApplicationContext();
 
+        String[] eating_values = getResources().getStringArray(R.array.EatingTimes);
+
         // Создаем интерфейс для бд
         database = new DatabaseInterface(getContext());
+        EatingFragmentsController controller = new EatingFragmentsController(eating_values);
 
         // Получаем все и вся
-        breakfastContainer = (LinearLayout) findViewById(R.id.breakfastContainer);
-        lunchContainer = (LinearLayout) findViewById(R.id.lunchContainer);
-        dinnerContainer = (LinearLayout) findViewById(R.id.dinnerContainer);
-        otherContainer = (LinearLayout) findViewById(R.id.otherContainer);
+        controller.breakfastContainer = (LinearLayout) findViewById(R.id.breakfastContainer);
+        controller.lunchContainer = (LinearLayout) findViewById(R.id.lunchContainer);
+        controller.dinnerContainer = (LinearLayout) findViewById(R.id.dinnerContainer);
+        controller.otherContainer = (LinearLayout) findViewById(R.id.otherContainer);
 
-        dish = (EditText) findViewById(R.id.Dish);
-        mass = (EditText) findViewById(R.id.Mass);
-
-        result = (TextView) findViewById(R.id.Result);
+        controller.addBreakfast = (Button) findViewById(R.id.addBreakfast);
+        controller.addLunch = (Button) findViewById(R.id.addLunch);
+        controller.addDinner = (Button) findViewById(R.id.addDinner);
+        controller.addOther = (Button) findViewById(R.id.addOther);
 
         Date date1 = new Date();
         String date = (new SimpleDateFormat("dd.MM.yyyy")).format(date1);
 
-        database.GetDishes(date);
+        database.GetDishes(date, controller);
 
         // Ставим прослушку на кнопки
-        addItem.setOnClickListener(this);
-        getItem.setOnClickListener(this);
-
-        // Прослушка на выбор элемента из списка вариантов еды
-        eating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
-                // Вот тут и сохраням наше числовое значение
-                eating_index = selectedItemPosition;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        // Ещё прослушка, ту на вибор даты
-        sortKey.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Вот здесь хз, как лучше. С одной стороны, более оптимально использовать число
-                // С другой, использование текста на выбранном элементе было бы более универсально
-                switch (position){
-                    case 1:
-                        // Создаем фрагмент с календарем и отображаем его
-                        DialogFragment DateFragment = new DatePickerFragment(R.id.SortKey, database);
-                        DateFragment.show(getSupportFragmentManager(), "datePicker");
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        // Сохраняем "приемы" пищи в список.
-        // Ну вот не получается получить в другом классе ресурсы из String.xml
-        eating_values = getResources().getStringArray(R.array.EatingTimes);
-        TypedArray bgColors = getResources().obtainTypedArray(R.array.EatingBgColors);
-        TypedArray textColors = getResources().obtainTypedArray(R.array.EatingTextColors);
-        FragmentManager fragMan = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragMan.beginTransaction();
-
-        for (int i = 0; i < eating_values.length; i++) {
-            EatingFragment eatingFragment = EatingFragment.newInstance(
-                    eating_values[i],
-                    bgColors.getColor(i, 0),
-                    textColors.getColor(i, 0)
-            );
-
-            fragmentTransaction.add(R.id.eatingLayout, eatingFragment);
-        }
-
-        fragmentTransaction.commit();
+        controller.addBreakfast.setOnClickListener(controller);
+        controller.addLunch.setOnClickListener(controller);
+        controller.addDinner.setOnClickListener(controller);
+        controller.addOther.setOnClickListener(controller);
     }
-
+    /*
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -189,16 +123,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
         }
-    }
+    }*/
 
     // Метод для получения контекста
     public static Context getContext() {
         return MainActivity.context;
-    }
-
-    // Метод получения списка времени приема пищи
-    public static String[] getEating_values(){
-        return eating_values;
     }
 
     // Является ли число натуральным, без пояснений

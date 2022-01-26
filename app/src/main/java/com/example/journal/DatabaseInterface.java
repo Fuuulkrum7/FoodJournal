@@ -42,7 +42,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     }
 
     // Добавляем блюдо в бд
-    public void AddDish(String dish, int mass, int eating){
+    public void addDish(String dish, int mass, int eating){
         // Здесь получаем текщую дату и время
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         Date date1 = new Date();
@@ -64,6 +64,30 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         values.put(DatabaseInfo.COLUMN_DATE, _date);
         values.put(DatabaseInfo.COLUMN_TIME, time);
 
+        AddDish adder = new AddDish(values, db);
+        adder.start();
+    }
+
+    // Соответсвтвенно, получем блюда
+    public void getDishes(String date, EatingFragmentsController controller){
+        SQLiteDatabase db = this.getReadableDatabase();
+        GetDish getDish = new GetDish(date, db, controller);
+        getDish.start();
+    }
+}
+
+
+class AddDish extends Thread{
+    private ContentValues values;
+    SQLiteDatabase db;
+
+    public AddDish(ContentValues values, SQLiteDatabase db){
+        this.values = values;
+        this.db = db;
+    }
+
+    @Override
+    public void run(){
         // Добавляем в бд
         try {
             long newRowId = db.insert(DatabaseInfo.TABLE_NAME, null, values);
@@ -77,14 +101,8 @@ public class DatabaseInterface extends SQLiteOpenHelper {
             toast.show();
         }
     }
-
-    // Соответсвтвенно, получем блюда
-    public void GetDishes(String date, EatingFragmentsController controller){
-        SQLiteDatabase db = this.getReadableDatabase();
-        GetDish getDish = new GetDish(date, db, controller);
-        getDish.start();
-    }
 }
+
 
 class GetDish extends Thread{
     String date;
@@ -148,10 +166,9 @@ class GetDish extends Thread{
         int timeColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_TIME);
 
         // Словарь, оно же хеш-таблица для наших данных
-        Map result = new HashMap<String, Map>();
-        String[] eating = controller.eating;
+        Map result = new HashMap<Integer, List>();
 
-        String _eating = "";
+        int _eating = 0;
         List<Map> dishResult = new ArrayList<Map>();
 
         // Пока в запросе ещё что-то есть
@@ -159,21 +176,16 @@ class GetDish extends Thread{
             // Получаем данные из запроса
             String currentDish = cursor.getString(dishColumnIndex);
             String currentMass = Integer.toString(cursor.getInt(massColumnIndex));
-            String currentEating = eating[cursor.getInt(eatingColumnIndex)];
+            int currentEating = cursor.getInt(eatingColumnIndex);
             String currentTime = cursor.getString(timeColumnIndex);
 
-            if (_eating.length() == 0){
-                _eating = currentEating;
-            }
-
-            if (! _eating.equals(currentEating)){
+            if (_eating != currentEating){
                 _eating = currentEating;
                 result.put(_eating, dishResult);
                 // Эта зараза при использовании clear чистит все и в словаре
                 dishResult = new ArrayList<Map>();
             }
-
-            Log.d("TEST", currentEating);
+            Log.d("TEST", currentEating + " " + currentDish);
             Map dishData = new HashMap<String, String>();
 
             dishData.put("dish", currentDish);
@@ -182,9 +194,11 @@ class GetDish extends Thread{
 
             dishResult.add(dishData);
         }
-
+        result.put(_eating, dishResult);
         // Закрываем курсор
         cursor.close();
+
+        Log.d("TEST", result.size() + "");
 
         controller.SetData(result);
     }

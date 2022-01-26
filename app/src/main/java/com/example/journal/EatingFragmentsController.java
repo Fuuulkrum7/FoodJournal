@@ -1,9 +1,10 @@
 package com.example.journal;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.List;
 import java.util.Map;
@@ -13,38 +14,61 @@ public class EatingFragmentsController implements View.OnClickListener {
     public Button addBreakfast, addLunch, addDinner, addOther;
     public LinearLayout breakfastContainer, lunchContainer, dinnerContainer, otherContainer;
     public String[] eating;
+    private DatabaseInterface database;
+    private MainActivity mainActivity;
 
-    public EatingFragmentsController(String[] eating){
+    public EatingFragmentsController(String[] eating, DatabaseInterface database, MainActivity mainActivity){
         this.eating = eating;
+        this.database = database;
+        this.mainActivity = mainActivity;
     }
 
     @Override
     public void onClick(View view) {
-        LinearLayout layout;
         switch (view.getId()){
             case R.id.addBreakfast:
-                layout = breakfastContainer;
+                createFragment(breakfastContainer, 0);
+                break;
             case R.id.addLunch:
-                layout = lunchContainer;
+                createFragment(lunchContainer, 1);
+                break;
             case R.id.addDinner:
-                layout = dinnerContainer;
+                createFragment(dinnerContainer, 2);
+                break;
             case R.id.addOther:
-                layout = otherContainer;
-            default:
-                // Здесь создается в layout фрагмент для добавляения нового блюда
+                createFragment(otherContainer, 3);
+                break;
         }
     }
 
-    public void SetData(Map data){
+    private DishFragment createFragment(LinearLayout layout, int eating){
+        FragmentTransaction ft = mainActivity.getSupportFragmentManager().beginTransaction();
+        DishFragment fragment = DishFragment.newInstance(database, true, eating);
+        ft.add(layout.getId(), fragment);
+        ft.commit();
 
+        return fragment;
     }
 
-    private void parseMap(LinearLayout layout, List<Map<String, String>> dishes){
+    public void SetData(Map<Integer, List<Map<String, String>>> data){
+        LinearLayout[] linearLayouts = {
+                breakfastContainer, lunchContainer, dinnerContainer, otherContainer
+        };
+
+        for (int i = 0; i < linearLayouts.length; i++){
+            parseMap(linearLayouts[i], data.get(i), i);
+        }
+    }
+
+    private void parseMap(LinearLayout layout, List<Map<String, String>> dishes, int eat){
+        if (dishes == null)
+            return;
+        Log.d("TEST", "here");
+
         for (Map<String, String> map: dishes){
-            // TODO здесь надо будет добавлять нормальные фрагменты
-            TextView text = new TextView(MainActivity.getContext());
-            text.setText(map.get("dish") + "\n" + map.get("mass") + "\n" + map.get("time") + "\n");
-            layout.addView(text);
+            DishFragment fragment = createFragment(layout, eat);
+
+            fragment.setNewData(map.get("dish"), map.get("mass"));
         }
     }
 }

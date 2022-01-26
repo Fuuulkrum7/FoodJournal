@@ -16,4 +16,5 @@
     <string name="title_search">Поиск</string>
     <string name="title_friends">Друзья</string>
     <string name="title_settings">Настройки</string>
+    <string name="AddButton">Button</string>
 </resources>

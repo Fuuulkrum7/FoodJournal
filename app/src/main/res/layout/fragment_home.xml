@@ -11,7 +11,7 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,7 +29,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/breakfast"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
 
                 <TextView
@@ -70,7 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/breakfastBorder"/>
+                    app:layout_constraintTop_toBottomOf="@+id/breakfastBorder" />
 
                 <View
                     android:id="@+id/downBorderBreakfast"
@@ -87,7 +87,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/lunch"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp">
 
                 <TextView
@@ -132,7 +132,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/lunchBorder"/>
+                    app:layout_constraintTop_toBottomOf="@+id/lunchBorder" />
 
                 <View
                     android:id="@+id/downBorderLunch"
@@ -191,7 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/dinnerBorder"/>
+                    app:layout_constraintTop_toBottomOf="@+id/dinnerBorder" />
 
                 <View
                     android:id="@+id/downBorderDinner"
@@ -253,7 +253,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/otherBorder"/>
+                    app:layout_constraintTop_toBottomOf="@+id/otherBorder" />
 
                 <View
                     android:id="@+id/downBorderOther"

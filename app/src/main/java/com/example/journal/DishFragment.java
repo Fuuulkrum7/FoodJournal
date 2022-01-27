@@ -5,10 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -22,7 +20,6 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     // Как-никак, в бд значение этой переменной является числом для удобства сортировки
     // И для экономии памяти
     int eating_index = 0;
-    boolean showButton = false;
 
 
     @Override
@@ -31,36 +28,35 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.dish_fragment,
                 container, false);
 
-        showButton = getArguments().getBoolean("showButton");
         eating_index = getArguments().getInt("eating");
+
+        mass = (EditText) view.findViewById(R.id.mass);
+        dish = (EditText) view.findViewById(R.id.dishName);
+
+        addDish = (Button) view.findViewById(R.id.addDish);
+        Log.d("TEXT", "" + (mass == null));
+        addDish.setOnClickListener(this);
+
+        if (getArguments().containsKey("dish")){
+            setNewData(
+                    getArguments().getString("dish"),
+                    getArguments().getString("mass")
+            );
+            disable();
+        }
+
+        Log.d("TEST", (addDish == null) + "");
 
         return view;
     }
 
 
-    @Override
-    public void onStart(){
-        super.onStart();
-
-        mass = (EditText) getActivity().findViewById(R.id.Mass);
-        dish = (EditText) getActivity().findViewById(R.id.DishName);
-
-        addDish = (Button) getActivity().findViewById(R.id.AddDish);
-        Log.d("TEST", addDish.getText().toString());
-        addDish.setOnClickListener(this);
-
-        if (showButton)
-            addDish.setVisibility(View.VISIBLE);
-    }
-
-
     public static DishFragment newInstance(
-            DatabaseInterface database, boolean showButton, int eating_index) {
+            DatabaseInterface database,  int eating_index) {
         DishFragment dishFragment = new DishFragment();
         dishFragment.database = database;
 
         Bundle args = new Bundle();
-        args.putBoolean("showButton", showButton);
         args.putInt("eating", eating_index);
         dishFragment.setArguments(args);
 
@@ -83,7 +79,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             // Если нажата кнопка добавить блюдо
-            case R.id.AddDish:
+            case R.id.addDish:
                 // Получаем выбранное блюдо и массу в качестве строки
                 String current_dish = dish.getText().toString(),
                         s_mass = mass.getText().toString();
@@ -96,9 +92,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                     database.addDish(current_dish, Integer.parseInt(s_mass), eating_index);
 
                     //
-                    mass.setEnabled(false);
-                    dish.setEnabled(false);
-                    addDish.setVisibility(View.GONE);
+                    disable();
                 }
                 // Тут, думаю, и так все понятно
                 else if (current_dish.length() == 0){
@@ -116,7 +110,13 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void setNewData(String dishName, String massData){
+    private void disable(){
+        mass.setEnabled(false);
+        dish.setEnabled(false);
+        addDish.setVisibility(View.GONE);
+    }
+
+    private void setNewData(String dishName, String massData){
         dish.setText(dishName);
         mass.setText(massData);
     }

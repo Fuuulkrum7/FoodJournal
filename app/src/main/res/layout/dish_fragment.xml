@@ -7,13 +7,13 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/DishName"
+        android:id="@+id/dishName"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:autofillHints=""
         android:ems="10"
-        android:hint="Блюдо"
+        android:hint="@string/dish"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textColorHint="#757575"
@@ -21,26 +21,26 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/Mass"
+        android:id="@+id/mass"
         android:layout_width="78dp"
         android:layout_height="48dp"
         android:layout_marginTop="3dp"
         android:autofillHints=""
         android:ems="10"
-        android:hint="Масса"
+        android:hint="@string/mass"
         android:inputType="number"
         android:textColorHint="#757575"
-        app:layout_constraintStart_toEndOf="@+id/DishName"
+        app:layout_constraintStart_toEndOf="@+id/dishName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/AddDish"
+        android:id="@+id/addDish"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginTop="3dp"
         android:layout_marginEnd="4dp"
-        android:text="Добавить"
-        android:visibility="gone"
+        android:text="@string/AddDish"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

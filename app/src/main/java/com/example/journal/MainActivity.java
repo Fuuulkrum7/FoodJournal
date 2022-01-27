@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         // Создаем интерфейс для бд
         database = new DatabaseInterface(getContext());
         EatingFragmentsController controller = new EatingFragmentsController(
-                eating_values, database, this
+                eating_values, this
         );
 
         // Получаем все и вся

@@ -17,4 +17,7 @@
     <string name="title_friends">Друзья</string>
     <string name="title_settings">Настройки</string>
     <string name="AddButton">Button</string>
+    <string name="mass">Масса</string>
+    <string name="dish">Блюдо</string>
+    <string name="AddDish">Добавить</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.journal;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,12 +15,10 @@ public class EatingFragmentsController implements View.OnClickListener {
     public Button addBreakfast, addLunch, addDinner, addOther;
     public LinearLayout breakfastContainer, lunchContainer, dinnerContainer, otherContainer;
     public String[] eating;
-    private DatabaseInterface database;
     private MainActivity mainActivity;
 
-    public EatingFragmentsController(String[] eating, DatabaseInterface database, MainActivity mainActivity){
+    public EatingFragmentsController(String[] eating, MainActivity mainActivity){
         this.eating = eating;
-        this.database = database;
         this.mainActivity = mainActivity;
     }
 
@@ -27,24 +26,31 @@ public class EatingFragmentsController implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.addBreakfast:
-                createFragment(breakfastContainer, 0);
+                createFragment(breakfastContainer.getId(), 0);
                 break;
             case R.id.addLunch:
-                createFragment(lunchContainer, 1);
+                createFragment(lunchContainer.getId(), 1);
                 break;
             case R.id.addDinner:
-                createFragment(dinnerContainer, 2);
+                createFragment(dinnerContainer.getId(), 2);
                 break;
             case R.id.addOther:
-                createFragment(otherContainer, 3);
+                createFragment(otherContainer.getId(), 3);
                 break;
         }
     }
 
-    private DishFragment createFragment(LinearLayout layout, int eating){
+    private DishFragment createFragment(int layout, int eating, Bundle args){
+        DishFragment dishFragment = createFragment(layout, eating);
+        dishFragment.setArguments(args);
+
+        return dishFragment;
+    }
+
+    private DishFragment createFragment(int layout, int eating){
         FragmentTransaction ft = mainActivity.getSupportFragmentManager().beginTransaction();
-        DishFragment fragment = DishFragment.newInstance(database, true, eating);
-        ft.add(layout.getId(), fragment);
+        DishFragment fragment = DishFragment.newInstance(mainActivity.database, eating);
+        ft.add(layout, fragment);
         ft.commit();
 
         return fragment;
@@ -63,12 +69,15 @@ public class EatingFragmentsController implements View.OnClickListener {
     private void parseMap(LinearLayout layout, List<Map<String, String>> dishes, int eat){
         if (dishes == null)
             return;
-        Log.d("TEST", "here");
 
         for (Map<String, String> map: dishes){
-            DishFragment fragment = createFragment(layout, eat);
+            Bundle args = new Bundle();
+            args.putString("dish", map.get("dish"));
+            args.putString("mass", map.get("mass"));
 
-            fragment.setNewData(map.get("dish"), map.get("mass"));
+            DishFragment fragment = createFragment(layout.getId(), eat, args);
+
+            //fragment.setNewData(map.get("dish"), map.get("mass"));
         }
     }
 }

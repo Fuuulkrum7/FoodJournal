@@ -180,8 +180,8 @@ class GetDish extends Thread{
             String currentTime = cursor.getString(timeColumnIndex);
 
             if (_eating != currentEating){
-                _eating = currentEating;
                 result.put(_eating, dishResult);
+                _eating = currentEating;
                 // Эта зараза при использовании clear чистит все и в словаре
                 dishResult = new ArrayList<Map>();
             }

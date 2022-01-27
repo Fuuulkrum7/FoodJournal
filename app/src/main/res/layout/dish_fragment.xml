@@ -16,7 +16,10 @@
         android:hint="@string/dish"
         android:inputType="textPersonName"
         android:minHeight="48dp"
+        android:textColor="@color/dish_text_color"
         android:textColorHint="#757575"
+        android:textSize="18sp"
+        android:textStyle="normal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,6 +32,7 @@
         android:ems="10"
         android:hint="@string/mass"
         android:inputType="number"
+        android:textColor="@color/dish_text_color"
         android:textColorHint="#757575"
         app:layout_constraintStart_toEndOf="@+id/dishName"
         app:layout_constraintTop_toTopOf="parent" />

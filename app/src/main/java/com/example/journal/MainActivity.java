@@ -1,17 +1,20 @@
 package com.example.journal;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,7 +22,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.journal.databinding.ActivityMainBinding;
+import com.example.journal.ui.friends.FriendsFragment;
+import com.example.journal.ui.home.HomeFragment;
+import com.example.journal.ui.search.SearchFragment;
+import com.example.journal.ui.settings.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,29 +39,47 @@ public class MainActivity extends AppCompatActivity {
     // Интерфейс для работы с бд
     public DatabaseInterface database;
 
-    // Необходимо для работы с панелью навигации.
-    private ActivityMainBinding binding;
+    private BottomNavigationView.OnItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    loadFragment(new HomeFragment());
+                    return true;
+                case R.id.navigation_search:
+                    loadFragment(new SearchFragment());
+                    return true;
+                case R.id.navigation_friends:
+                    loadFragment(new FriendsFragment());
+                    return true;
+                case R.id.navigation_settings:
+                    loadFragment(new SettingsFragment());
+                    return true;
+            }
+            return false;
+        }
+    };
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.nav_host_fragment, fragment);
+        ft.commit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        //Алгоритм ниже нужен для того, чтобы задать управление навигацией.
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
+        navigation.setOnItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        //Видимо, данная переменная создаётся для взаимодействия с панелью навигации.
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_search, R.id.navigation_friends, R.id.navigation_settings)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        loadFragment(new HomeFragment());
 
         // Сохраняем контекст
         MainActivity.context = getApplicationContext();
-
         String[] eating_values = getResources().getStringArray(R.array.EatingTimes);
 
         // Создаем интерфейс для бд

@@ -11,28 +11,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.journal.R;
 import com.example.journal.databinding.FragmentFriendsBinding;
 
 public class FriendsFragment extends Fragment {
-
-    private FriendsViewModel friendsViewModel;
-private FragmentFriendsBinding binding;
+    private FragmentFriendsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
-        friendsViewModel =
-                new ViewModelProvider(this).get(FriendsViewModel.class);
-
-    binding = FragmentFriendsBinding.inflate(inflater, container, false);
-    View root = binding.getRoot();
-
-        friendsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-
-            }
-        });
-        return root;
+        return inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
 @Override

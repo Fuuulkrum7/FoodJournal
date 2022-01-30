@@ -1,22 +1,19 @@
 package com.example.journal;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.BaseColumns;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class DatabaseInterface extends SQLiteOpenHelper {
     // Данные по бд
@@ -185,7 +182,6 @@ class GetDish extends Thread{
                 // Эта зараза при использовании clear чистит все и в словаре
                 dishResult = new ArrayList<Map>();
             }
-            Log.d("TEST", currentEating + " " + currentDish);
             Map dishData = new HashMap<String, String>();
 
             dishData.put("dish", currentDish);
@@ -197,8 +193,6 @@ class GetDish extends Thread{
         result.put(_eating, dishResult);
         // Закрываем курсор
         cursor.close();
-
-        Log.d("TEST", result.size() + "");
 
         controller.SetData(result);
     }

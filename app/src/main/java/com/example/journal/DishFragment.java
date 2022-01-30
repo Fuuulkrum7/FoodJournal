@@ -28,13 +28,13 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.dish_fragment,
                 container, false);
 
+        database = new DatabaseInterface(MainActivity.getContext());
         eating_index = getArguments().getInt("eating");
 
         mass = (EditText) view.findViewById(R.id.mass);
         dish = (EditText) view.findViewById(R.id.dishName);
 
         addDish = (Button) view.findViewById(R.id.addDish);
-        Log.d("TEXT", "" + (mass == null));
         addDish.setOnClickListener(this);
 
         if (getArguments().containsKey("dish")){
@@ -51,10 +51,8 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public static DishFragment newInstance(
-            DatabaseInterface database,  int eating_index) {
+    public static DishFragment newInstance(int eating_index) {
         DishFragment dishFragment = new DishFragment();
-        dishFragment.database = database;
 
         Bundle args = new Bundle();
         args.putInt("eating", eating_index);

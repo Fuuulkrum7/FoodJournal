@@ -1,10 +1,11 @@
 package com.example.journal;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.List;
@@ -15,11 +16,11 @@ public class EatingFragmentsController implements View.OnClickListener {
     public Button addBreakfast, addLunch, addDinner, addOther;
     public LinearLayout breakfastContainer, lunchContainer, dinnerContainer, otherContainer;
     public String[] eating;
-    private MainActivity mainActivity;
+    Fragment activity;
 
-    public EatingFragmentsController(String[] eating, MainActivity mainActivity){
+    public EatingFragmentsController(String[] eating, Fragment activity){
         this.eating = eating;
-        this.mainActivity = mainActivity;
+        this.activity = activity;
     }
 
     @Override
@@ -40,6 +41,33 @@ public class EatingFragmentsController implements View.OnClickListener {
         }
     }
 
+    public boolean clearAllData(){
+        try {
+            breakfastContainer.removeAllViews();
+            lunchContainer.removeAllViews();
+            dinnerContainer.removeAllViews();
+            otherContainer.removeAllViews();
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+
+    public void hideButtons(){
+        addBreakfast.setVisibility(View.GONE);
+        addDinner.setVisibility(View.GONE);
+        addLunch.setVisibility(View.GONE);
+        addOther.setVisibility(View.GONE);
+    }
+
+    public void showButtons(){
+        addBreakfast.setVisibility(View.VISIBLE);
+        addDinner.setVisibility(View.VISIBLE);
+        addLunch.setVisibility(View.VISIBLE);
+        addOther.setVisibility(View.VISIBLE);
+    }
+
     private DishFragment createFragment(int layout, int eating, Bundle args){
         DishFragment dishFragment = createFragment(layout, eating);
         dishFragment.setArguments(args);
@@ -48,8 +76,8 @@ public class EatingFragmentsController implements View.OnClickListener {
     }
 
     private DishFragment createFragment(int layout, int eating){
-        FragmentTransaction ft = mainActivity.getSupportFragmentManager().beginTransaction();
-        DishFragment fragment = DishFragment.newInstance(mainActivity.database, eating);
+        DishFragment fragment = DishFragment.newInstance(eating);
+        FragmentTransaction ft = activity.getChildFragmentManager().beginTransaction();
         ft.add(layout, fragment);
         ft.commit();
 

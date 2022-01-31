@@ -71,6 +71,7 @@ public class SearchFragment extends Fragment {
                 else
                     controller.showButtons();
 
+                controller.clearAllData();
                 database.getDishes(String.format("%d.%d%d.%d",
                         day, (month + 1) / 10,(month + 1) % 10, year), controller);
             }

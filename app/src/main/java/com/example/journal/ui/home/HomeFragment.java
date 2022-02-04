@@ -9,7 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.ViewTreeObserver;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -72,21 +72,7 @@ public class HomeFragment extends Fragment {
         );
 
         // Получаем все и вся
-        controller.breakfastContainer = (LinearLayout) view.findViewById(R.id.breakfastContainer);
-        controller.lunchContainer = (LinearLayout) view.findViewById(R.id.lunchContainer);
-        controller.dinnerContainer = (LinearLayout) view.findViewById(R.id.dinnerContainer);
-        controller.otherContainer = (LinearLayout) view.findViewById(R.id.otherContainer);
-
-        controller.addBreakfast = (Button) view.findViewById(R.id.addBreakfast);
-        controller.addLunch = (Button) view.findViewById(R.id.addLunch);
-        controller.addDinner = (Button) view.findViewById(R.id.addDinner);
-        controller.addOther = (Button) view.findViewById(R.id.addOther);
-
-        // Ставим прослушку на кнопки
-        controller.addBreakfast.setOnClickListener(controller);
-        controller.addLunch.setOnClickListener(controller);
-        controller.addDinner.setOnClickListener(controller);
-        controller.addOther.setOnClickListener(controller);
+        controller.setData(view);
 
         Date date1 = new Date();
         String date = (new SimpleDateFormat("dd.MM.yyyy")).format(date1);
@@ -106,10 +92,13 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.show_calendar:  {
+                // Если календарь уже создан
                 if (calendar != null){
+                    // начинаем двигать scrollView назад
                     ((ScrollView) getActivity().findViewById(R.id.scrollView)).animate()
                             .translationY(0);
 
+                    // Прячем календарь, ставя альфа-канал на 0 и двигая его вверх
                     calendar.setAlpha(0);
                     calendar.animate()
                         .translationY(0)
@@ -125,25 +114,47 @@ public class HomeFragment extends Fragment {
                     return true;
                 }
 
+                // Штука для добавления новых элементов в контсреинт
                 ConstraintSet set = new ConstraintSet();
 
+                // Создаем календарь, попутно выставляя нужные парметры и привязывая прослушку на вабор даты
                 calendar = new CalendarView(MainActivity.getContext());
+                calendar.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0));
                 calendar.setOnDateChangeListener(onDateChangeListener);
                 calendar.setId(View.generateViewId());
+
+                // Если переменная, сохраняющая дату, уже существует
+                // (т.е. когда мы один раз выбрали дату с помощью календаря, мы ее так запоминаем)
                 if (date != null)
                     calendar.setDate(date.getTimeInMillis());
 
+                // добавляем календарь
                 layout.addView(calendar, 0);
 
+                // Отвязываем прокрутку от верхней части страницы
                 ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.scrollView);
                 set.clear(scrollView.getId(), ConstraintSet.TOP);
 
+                // Привязываем кандарь и прокрутку
                 set.connect(scrollView.getId(), ConstraintSet.TOP, calendar.getId(), ConstraintSet.BOTTOM);
                 set.connect(calendar.getId(), ConstraintSet.TOP, layout.getId(), ConstraintSet.TOP);
 
-                // TODO исправить баг со съезжанием scrollView
-                scrollView.animate()
-                        .translationY(calendar.getHeight() + scrollView.getHeight() + 100);
+                // Это прослушка, которая будет вызвана после того, как календарь создастся
+                // и мы наконец-то сможем получить его высоту
+                calendar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        // Чтобы не было последующих вызовов
+                        // (они происходят при каждом изменении календаря)
+                        // мы отвязываем прослушку
+                        calendar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                         // Двигаем прокуртку
+                        scrollView.animate()
+                                .translationY(calendar.getHeight());
+                    }
+                });
+
+                // Заставляем календарь красиво появиться
                 calendar.setAlpha(0f);
                 calendar.animate()
                         .translationY(calendar.getHeight())

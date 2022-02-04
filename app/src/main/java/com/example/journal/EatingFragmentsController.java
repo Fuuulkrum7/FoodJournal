@@ -54,6 +54,25 @@ public class EatingFragmentsController implements View.OnClickListener {
         }
     }
 
+    public void setData(View view){
+        // Получаем все и вся
+        breakfastContainer = (LinearLayout) view.findViewById(R.id.breakfastContainer);
+        lunchContainer = (LinearLayout) view.findViewById(R.id.lunchContainer);
+        dinnerContainer = (LinearLayout) view.findViewById(R.id.dinnerContainer);
+        otherContainer = (LinearLayout) view.findViewById(R.id.otherContainer);
+
+        addBreakfast = (Button) view.findViewById(R.id.addBreakfast);
+        addLunch = (Button) view.findViewById(R.id.addLunch);
+        addDinner = (Button) view.findViewById(R.id.addDinner);
+        addOther = (Button) view.findViewById(R.id.addOther);
+
+        // Ставим прослушку на кнопки
+        addBreakfast.setOnClickListener(this);
+        addLunch.setOnClickListener(this);
+        addDinner.setOnClickListener(this);
+        addOther.setOnClickListener(this);
+    }
+
     public void hideButtons(){
         addBreakfast.setVisibility(View.GONE);
         addDinner.setVisibility(View.GONE);

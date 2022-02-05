@@ -14,7 +14,7 @@
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/dish"
-        android:inputType="textPersonName"
+        android:inputType="textAutoCorrect|textPersonName|textCapSentences"
         android:minHeight="48dp"
         android:textColor="@color/dish_text_color"
         android:textColorHint="#757575"

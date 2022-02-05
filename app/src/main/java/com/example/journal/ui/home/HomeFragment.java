@@ -39,20 +39,27 @@ public class HomeFragment extends Fragment {
     CalendarView calendar;
     Calendar date;
 
+    // Прослушка на календарь на выбор даты
     CalendarView.OnDateChangeListener onDateChangeListener = new CalendarView.OnDateChangeListener() {
         @Override
         public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
+            // Сохраняем выбранную дату в переменную, чтобы после уничтожения календаря пользователь
+            // при повторном открытии календаря увидел выбранную ранее дату (а не текущую)
             date = Calendar.getInstance();
             date.set(year, month, day);
             LocalDate date1 = new LocalDate();
             LocalDate date2 = new LocalDate(year, month + 1, day);
+
+            // Узнаем, сколько дней прошло с выбранного дня
             int date = Days.daysBetween(date1, date2).getDays();
 
+            // если прошло более трех дней или выбран один из следующих, прячем кнопки
             if (date  * -1 > 3 || date > 0)
                 controller.hideButtons();
             else
                 controller.showButtons();
 
+            // Выводим новые данные по выбранной дате на экран
             controller.clearAllData();
             database.getDishes(String.format("%d.%d%d.%d",
                     day, (month + 1) / 10,(month + 1) % 10, year), controller);
@@ -94,8 +101,10 @@ public class HomeFragment extends Fragment {
             case R.id.show_calendar:  {
                 // Если календарь уже создан
                 if (calendar != null){
-                    // начинаем двигать scrollView назад
-                    ((ScrollView) getActivity().findViewById(R.id.scrollView)).animate()
+                    // начинаем двигать scrollView назад, попутно вернув ему нормальные размеры
+                    ScrollView scrollView = (ScrollView) getActivity().findViewById(R.id.scrollView);
+                    scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    scrollView.animate()
                             .translationY(0);
 
                     // Прячем календарь, ставя альфа-канал на 0 и двигая его вверх
@@ -159,7 +168,14 @@ public class HomeFragment extends Fragment {
                 calendar.animate()
                         .translationY(calendar.getHeight())
                         .alpha(1.0f)
-                        .setListener(null);
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                // Уменьшаем размеры прокрутки, так как оно само не понимает, что часть его уехало
+                                scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, scrollView.getHeight() - calendar.getHeight()));
+                            }
+                        });
 
                 return true;
             }

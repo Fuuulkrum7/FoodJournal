@@ -25,6 +25,7 @@ public class EatingFragmentsController implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        // Добавляем контейнер под блюдо
         switch (view.getId()){
             case R.id.addBreakfast:
                 createFragment(breakfastContainer.getId(), 0);
@@ -41,6 +42,7 @@ public class EatingFragmentsController implements View.OnClickListener {
         }
     }
 
+    // Чистим данные в завтраке и тд
     public boolean clearAllData(){
         try {
             breakfastContainer.removeAllViews();
@@ -73,20 +75,24 @@ public class EatingFragmentsController implements View.OnClickListener {
         addOther.setOnClickListener(this);
     }
 
+    private void changeButtonsCondition(int i){
+        addBreakfast.setVisibility(i);
+        addDinner.setVisibility(i);
+        addLunch.setVisibility(i);
+        addOther.setVisibility(i);
+    }
+
+    // прячем
     public void hideButtons(){
-        addBreakfast.setVisibility(View.GONE);
-        addDinner.setVisibility(View.GONE);
-        addLunch.setVisibility(View.GONE);
-        addOther.setVisibility(View.GONE);
+        changeButtonsCondition(View.GONE);
     }
 
+    // и показываем кнопки
     public void showButtons(){
-        addBreakfast.setVisibility(View.VISIBLE);
-        addDinner.setVisibility(View.VISIBLE);
-        addLunch.setVisibility(View.VISIBLE);
-        addOther.setVisibility(View.VISIBLE);
+        changeButtonsCondition(View.VISIBLE);
     }
 
+    // Контейнер для блюда с аргументами для фрагмента
     private DishFragment createFragment(int layout, int eating, Bundle args){
         DishFragment dishFragment = createFragment(layout, eating);
         dishFragment.setArguments(args);
@@ -94,6 +100,7 @@ public class EatingFragmentsController implements View.OnClickListener {
         return dishFragment;
     }
 
+    // Дефолтный способ создания контейнера для блюда, без аргументов
     private DishFragment createFragment(int layout, int eating){
         DishFragment fragment = DishFragment.newInstance(eating);
         FragmentTransaction ft = activity.getChildFragmentManager().beginTransaction();

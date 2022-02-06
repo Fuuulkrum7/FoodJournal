@@ -39,14 +39,10 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     }
 
     // Добавляем блюдо в бд
-    public void addDish(String dish, int mass, int eating){
-        // Здесь получаем текщую дату и время
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+    public void addDish(String dish, int mass, int eating, String date){
+        // Здесь получаем текущее время
         Date date1 = new Date();
-
-        String _date = formatter.format(date1);
-
-        formatter = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         String time = formatter.format(date1);
 
         // Получаем бд для записи данных
@@ -58,7 +54,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         values.put(DatabaseInfo.COLUMN_DISH, dish);
         values.put(DatabaseInfo.COLUMN_MASS, mass);
         values.put(DatabaseInfo.COLUMN_EATING, eating);
-        values.put(DatabaseInfo.COLUMN_DATE, _date);
+        values.put(DatabaseInfo.COLUMN_DATE, date);
         values.put(DatabaseInfo.COLUMN_TIME, time);
 
         AddDish adder = new AddDish(values, db);

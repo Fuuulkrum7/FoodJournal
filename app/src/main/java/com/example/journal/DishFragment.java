@@ -15,6 +15,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     Button addDish;
     EditText mass, dish;
     DatabaseInterface database;
+    String date;
 
     // Индекс выбранного времени пищи (дабы сразу при выборе его сохранять в таком виде)
     // Как-никак, в бд значение этой переменной является числом для удобства сортировки
@@ -30,6 +31,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
 
         database = new DatabaseInterface(MainActivity.getContext());
         eating_index = getArguments().getInt("eating");
+        date = getArguments().getString("date");
 
         mass = (EditText) view.findViewById(R.id.mass);
         dish = (EditText) view.findViewById(R.id.dishName);
@@ -51,11 +53,12 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public static DishFragment newInstance(int eating_index) {
+    public static DishFragment newInstance(int eating_index, String date) {
         DishFragment dishFragment = new DishFragment();
 
         Bundle args = new Bundle();
         args.putInt("eating", eating_index);
+        args.putString("date", date);
         dishFragment.setArguments(args);
 
         return dishFragment;
@@ -87,7 +90,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                 // натуральным числом. И ввели ли что-то в поле "блюдо"
                 if (isNatural(s_mass) && current_dish.length() > 0){
                     // Добавляем блюдо в бд
-                    database.addDish(current_dish, Integer.parseInt(s_mass), eating_index);
+                    database.addDish(current_dish, Integer.parseInt(s_mass), eating_index, date);
 
                     //
                     disable();

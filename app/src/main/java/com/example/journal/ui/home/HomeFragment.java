@@ -59,10 +59,16 @@ public class HomeFragment extends Fragment {
             else
                 controller.showButtons();
 
+            String current_date = String.format("%d%d.%d%d.%d",
+                    day / 10, day % 10,
+                    (month + 1) / 10,(month + 1) % 10,
+                    year
+            );
+
             // Выводим новые данные по выбранной дате на экран
             controller.clearAllData();
-            database.getDishes(String.format("%d.%d%d.%d",
-                    day, (month + 1) / 10,(month + 1) % 10, year), controller);
+            database.getDishes(current_date, controller);
+            controller.date = current_date;
         }
     };
 
@@ -78,11 +84,13 @@ public class HomeFragment extends Fragment {
                 getResources().getStringArray(R.array.EatingTimes), this
         );
 
-        // Получаем все и вся
-        controller.setData(view);
-
         Date date1 = new Date();
         String date = (new SimpleDateFormat("dd.MM.yyyy")).format(date1);
+
+        // Получаем все и вся
+        controller.setData(view);
+        // Запоминаем текущую дату
+        controller.date = date;
 
         database.getDishes(date, controller);
 

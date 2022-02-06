@@ -16,6 +16,7 @@ public class EatingFragmentsController implements View.OnClickListener {
     public Button addBreakfast, addLunch, addDinner, addOther;
     public LinearLayout breakfastContainer, lunchContainer, dinnerContainer, otherContainer;
     public String[] eating;
+    public String date;
     Fragment activity;
 
     public EatingFragmentsController(String[] eating, Fragment activity){
@@ -102,7 +103,7 @@ public class EatingFragmentsController implements View.OnClickListener {
 
     // Дефолтный способ создания контейнера для блюда, без аргументов
     private DishFragment createFragment(int layout, int eating){
-        DishFragment fragment = DishFragment.newInstance(eating);
+        DishFragment fragment = DishFragment.newInstance(eating, date);
         FragmentTransaction ft = activity.getChildFragmentManager().beginTransaction();
         ft.add(layout, fragment);
         ft.commit();
@@ -129,9 +130,7 @@ public class EatingFragmentsController implements View.OnClickListener {
             args.putString("dish", map.get("dish"));
             args.putString("mass", map.get("mass"));
 
-            DishFragment fragment = createFragment(layout.getId(), eat, args);
-
-            //fragment.setNewData(map.get("dish"), map.get("mass"));
+            createFragment(layout.getId(), eat, args);
         }
     }
 }

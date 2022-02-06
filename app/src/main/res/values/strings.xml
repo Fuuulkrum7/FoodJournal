@@ -20,4 +20,10 @@
     <string name="mass">Масса</string>
     <string name="dish">Блюдо</string>
     <string name="AddDish">Добавить</string>
+    <string name="label_breakfast">Завтрак</string>
+    <string name="label_lunch">Обед</string>
+    <string name="label_dinner">Ужин</string>
+    <string name="label_other">Прочее</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

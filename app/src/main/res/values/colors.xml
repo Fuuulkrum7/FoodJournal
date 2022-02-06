@@ -7,18 +7,26 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="breakfast_bg_def">#80DEEA</color>
+    <color name="lunch_bg_def">#4FC3F7</color>
+    <color name="dinner_bg_def">#00C7FA</color>
+    <color name="other_bg_def">#18FFFF</color>
+    <color name="breakfast_fg_def">#006064</color>
+    <color name="lunch_fg_def">#01579B</color>
+    <color name="dinner_fg_def">#01579B</color>
+    <color name="other_fg_def">#00B8D4</color>
 
     <array name="EatingBgColors">
-        <item>#FFC107</item>
-        <item>#00C62B</item>
+        <item>#80DEEA</item>
+        <item>#4FC3F7</item>
         <item>#00C7FA</item>
-        <item>#FD3C3C</item>
+        <item>#18FFFF</item>
     </array>
 
     <array name="EatingTextColors">
-        <item>#976001</item>
-        <item>#007519</item>
-        <item>#007C9C</item>
-        <item>#751B1B</item>
+        <item>#006064</item>
+        <item>#01579B</item>
+        <item>#01579B</item>
+        <item>#00B8D4</item>
     </array>
 </resources>

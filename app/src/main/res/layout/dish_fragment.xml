@@ -6,46 +6,63 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/dishName"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/dish"
-        android:inputType="textAutoCorrect|textPersonName|textCapSentences"
-        android:minHeight="48dp"
-        android:textColor="@color/dish_text_color"
-        android:textColorHint="#757575"
-        android:textSize="18sp"
-        android:textStyle="normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/mass"
-        android:layout_width="78dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="3dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/mass"
-        android:inputType="number"
-        android:textColor="@color/dish_text_color"
-        android:textColorHint="#757575"
-        app:layout_constraintStart_toEndOf="@+id/dishName"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/addDish"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="4dp"
-        android:text="@string/AddDish"
-        android:visibility="visible"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/dishName"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_weight="0.45"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/dish"
+            android:inputType="textAutoCorrect|textPersonName|textCapSentences"
+            android:minHeight="48dp"
+            android:textColor="@color/dish_text_color"
+            android:textColorHint="#757575"
+            android:textSize="18sp"
+            android:textStyle="normal" />
+
+        <EditText
+            android:id="@+id/mass"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="3dp"
+            android:layout_weight="0.2"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/mass"
+            android:inputType="number"
+            android:textColor="@color/dish_text_color"
+            android:textColorHint="#757575" />
+
+        <Button
+            android:id="@+id/addDish"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="135dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="0.35"
+            android:background="#006064"
+            android:text="@string/AddDish"
+            android:textColor="@color/dish_button_text"
+            android:textSize="16sp"
+
+            android:textStyle="normal"
+            android:visibility="visible"
+            app:backgroundTint="@color/dish_button"
+            app:cornerRadius="8dp"
+            app:rippleColor="#FDAAAAAA"
+            app:strokeColor="#000000"
+            app:strokeWidth="2dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,25 +1,25 @@
 package com.example.journal;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class QRReader extends Fragment {
 
     private Button scanBtn;
     private TextView formatTxt, contentTxt;
+    private View view;
+    private IntentIntegrator scanIntegrator;
 
     static {
         System.loadLibrary("iconv");
@@ -35,15 +35,12 @@ public class QRReader extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_qr_reader, container, false);
+        view = inflater.inflate(R.layout.fragment_qr_reader, container, false);
+
+        scanIntegrator = new IntentIntegrator(this.getActivity());
 
         scanBtn = (Button)view.findViewById(R.id.scan_button);
         formatTxt = (TextView)view.findViewById(R.id.scan_format);
@@ -53,18 +50,17 @@ public class QRReader extends Fragment {
             public void onClick(View v) {
                 //Тут нужно сделать сканирование.
                 /*Вроде это делается так:
+                 */
 
                     if(v.getId()==R.id.scan_button){
                     //scan
-                    IntentIntegrator scanIntegrator = new IntentIntegrator(this);
                     scanIntegrator.initiateScan();
                     }
 
-                 */
             }
 
 
-            /*public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+            public void onActivityResult(int requestCode, int resultCode, Intent intent) {
                 //Это уже для обработки результата сканирования.
                 IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
@@ -78,7 +74,7 @@ public class QRReader extends Fragment {
                             "Не удалось считать код!", Toast.LENGTH_SHORT);
                     toast.show();
                 }
-            }*/
+            }
         });
         return view;
     }

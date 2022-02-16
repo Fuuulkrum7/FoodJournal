@@ -2,28 +2,29 @@ package com.example.journal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.fragment.app.Fragment;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class QRReader extends Fragment {
+public class QRReader extends Fragment implements View.OnClickListener {
 
     private Button scanBtn;
     private TextView formatTxt, contentTxt;
     private View view;
     private IntentIntegrator scanIntegrator;
-
-    static {
-        System.loadLibrary("iconv");
-    }
 
     public QRReader() {
         // Required empty public constructor
@@ -40,42 +41,38 @@ public class QRReader extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_qr_reader, container, false);
 
-        scanIntegrator = new IntentIntegrator(this.getActivity());
-
         scanBtn = (Button)view.findViewById(R.id.scan_button);
         formatTxt = (TextView)view.findViewById(R.id.scan_format);
         contentTxt = (TextView)view.findViewById(R.id.scan_content);
-        scanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Тут нужно сделать сканирование.
-                /*Вроде это делается так:
-                 */
-
-                    if(v.getId()==R.id.scan_button){
-                    //scan
-                    scanIntegrator.initiateScan();
-                    }
-
-            }
-
-
-            public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-                //Это уже для обработки результата сканирования.
-                IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-
-                if (scanningResult != null) {
-                    //Если что-то нашли
-                    String scanContent = scanningResult.getContents();
-                    String scanFormat = scanningResult.getFormatName();
-                }
-                else{
-                    Toast toast = Toast.makeText(view.getContext(),
-                            "Не удалось считать код!", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        });
+        scanBtn.setOnClickListener(this);
         return view;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                String contents = intent.getStringExtra("SCAN_RESULT");
+                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                Toast.makeText(getContext(), contents, Toast.LENGTH_LONG).show();
+                // Handle successful scan
+            } else if (resultCode == RESULT_CANCELED) {
+                // Handle cancel
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.scan_button) {
+            scanIntegrator = IntentIntegrator.forSupportFragment(this);
+            scanIntegrator.setOrientationLocked(false);
+            scanIntegrator.setPrompt("Scan");
+            scanIntegrator.setBeepEnabled(false);
+            scanIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+            Intent scan = scanIntegrator.createScanIntent();
+            //scan
+            scanIntegrator.initiateScan();
+        }
     }
 }

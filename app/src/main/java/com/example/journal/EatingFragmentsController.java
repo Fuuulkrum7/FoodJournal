@@ -129,7 +129,7 @@ public class EatingFragmentsController implements View.OnClickListener {
             Bundle args = new Bundle();
             args.putString("dish", map.get("dish"));
             args.putString("mass", map.get("mass"));
-
+            args.putString("calories", map.get("calories"));
             createFragment(layout.getId(), eat, args);
         }
     }

@@ -9,14 +9,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/dishName"
-            android:layout_width="190dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:layout_weight="0.45"
@@ -30,23 +30,41 @@
             android:textSize="18sp"
             android:textStyle="normal" />
 
-        <EditText
-            android:id="@+id/mass"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="3dp"
-            android:layout_weight="0.2"
-            android:autofillHints=""
-            android:ems="10"
-            android:hint="@string/mass"
-            android:inputType="number"
-            android:textColor="@color/dish_text_color"
-            android:textColorHint="#757575" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/mass"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:layout_weight="0.2"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/mass"
+                android:inputType="number"
+                android:textColor="@color/dish_text_color"
+                android:textColorHint="#757575" />
+
+            <EditText
+                android:id="@+id/calories"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:layout_weight="0.2"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/calories"
+                android:inputType="number"
+                android:textColor="@color/dish_text_color"
+                android:textColorHint="#757575" />
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/addDish"
             style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="135dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
@@ -55,7 +73,7 @@
             android:text="@string/AddDish"
             android:textColor="@color/dish_button_text"
             android:textSize="16sp"
-
+            android:layout_gravity="center"
             android:textStyle="normal"
             android:visibility="visible"
             app:backgroundTint="@color/dish_button"
@@ -63,6 +81,10 @@
             app:rippleColor="#FDAAAAAA"
             app:strokeColor="#000000"
             app:strokeWidth="2dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/cardview_shadow_start_color"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

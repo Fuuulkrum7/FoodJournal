@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 public class DishFragment extends Fragment implements View.OnClickListener {
     Button addDish;
-    EditText mass, dish;
+    EditText mass, dish, calories;
     DatabaseInterface database;
     String date;
 
@@ -35,6 +35,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
 
         mass = (EditText) view.findViewById(R.id.mass);
         dish = (EditText) view.findViewById(R.id.dishName);
+        calories = (EditText) view.findViewById(R.id.calories);
 
         addDish = (Button) view.findViewById(R.id.addDish);
         addDish.setOnClickListener(this);
@@ -42,7 +43,8 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         if (getArguments().containsKey("dish")){
             setNewData(
                     getArguments().getString("dish"),
-                    getArguments().getString("mass")
+                    getArguments().getString("mass"),
+                    getArguments().getString("calories")
             );
             disable();
         }
@@ -83,14 +85,15 @@ public class DishFragment extends Fragment implements View.OnClickListener {
             case R.id.addDish:
                 // Получаем выбранное блюдо и массу в качестве строки
                 String current_dish = dish.getText().toString(),
-                        s_mass = mass.getText().toString();
+                        s_mass = mass.getText().toString(),
+                        s_calories = calories.getText().toString();
 
                 // Как известно, масса является числом положительным. Дробным быть может, но зачем?
                 // Нам лишнее место в бд занимать нет смысла. Поэтому проверяем, является ли масса
                 // натуральным числом. И ввели ли что-то в поле "блюдо"
-                if (isNatural(s_mass) && current_dish.length() > 0){
+                if (isNatural(s_mass) && isNatural(s_calories) && current_dish.length() > 0){
                     // Добавляем блюдо в бд
-                    database.addDish(current_dish, Integer.parseInt(s_mass), eating_index, date);
+                    database.addDish(current_dish, Integer.parseInt(s_mass), Integer.parseInt(s_calories), eating_index, date);
 
                     //
                     disable();
@@ -103,7 +106,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                 }
                 else {
                     Toast toast = Toast.makeText(MainActivity.getContext(),
-                            "Масса должна быть натуральным числом!", Toast.LENGTH_SHORT);
+                            "Масса и калории должны быть натуральными числами!", Toast.LENGTH_SHORT);
                     toast.show();
                 }
 
@@ -114,11 +117,13 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     private void disable(){
         mass.setEnabled(false);
         dish.setEnabled(false);
+        calories.setEnabled(false);
         addDish.setVisibility(View.GONE);
     }
 
-    private void setNewData(String dishName, String massData){
+    private void setNewData(String dishName, String massData, String caloriesData){
         dish.setText(dishName);
         mass.setText(massData);
+        calories.setText(caloriesData);
     }
 }

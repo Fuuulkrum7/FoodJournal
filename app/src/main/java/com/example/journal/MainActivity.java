@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,8 +18,10 @@ import com.example.journal.ui.home.HomeFragment;
 import com.example.journal.ui.search.SearchFragment;
 import com.example.journal.ui.settings.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanIntentResult;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityResultCallback<ScanIntentResult> {
     // Некоторые статические перемнные, в частности контекст и разное время птитания
     private static Context context;
 
@@ -62,6 +66,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Сохраняем контекст
         MainActivity.context = getApplicationContext();
+    }
+
+    @Override
+    public void onActivityResult(ScanIntentResult result) {
+        Toast.makeText(getContext(), result.getContents(), Toast.LENGTH_LONG).show();
     }
 
     // Метод для получения контекста

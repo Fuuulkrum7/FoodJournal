@@ -1,5 +1,6 @@
 package com.example.journal;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import static android.app.Activity.RESULT_CANCELED;
@@ -14,19 +15,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultRegistry;
 import androidx.fragment.app.Fragment;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanIntentResult;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 public class QRReader extends Fragment implements View.OnClickListener {
 
     private Button scanBtn;
     private TextView formatTxt, contentTxt;
     private View view;
-    private IntentIntegrator scanIntegrator;
+    private ScanContract contract;
 
     public QRReader() {
+        contract = new ScanContract();
         // Required empty public constructor
     }
 
@@ -48,31 +56,24 @@ public class QRReader extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                Toast.makeText(getContext(), contents, Toast.LENGTH_LONG).show();
-                // Handle successful scan
-            } else if (resultCode == RESULT_CANCELED) {
-                // Handle cancel
-            }
-        }
-    }
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.scan_button) {
-            scanIntegrator = IntentIntegrator.forSupportFragment(this);
+
+            ScanOptions options = new ScanOptions();
+            options.setPrompt("Finding friend's QR");
+            options.setBeepEnabled(false);
+
+            getActivity().startActivity(contract.createIntent(getActivity(), options));
+
+            /*scanIntegrator = IntentIntegrator.forSupportFragment(this);
             scanIntegrator.setOrientationLocked(false);
             scanIntegrator.setPrompt("Scan");
             scanIntegrator.setBeepEnabled(false);
             scanIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
             Intent scan = scanIntegrator.createScanIntent();
             //scan
-            scanIntegrator.initiateScan();
+            scanIntegrator.initiateScan();*/
         }
     }
 }

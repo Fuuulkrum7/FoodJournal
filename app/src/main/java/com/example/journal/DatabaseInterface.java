@@ -39,7 +39,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     }
 
     // Добавляем блюдо в бд
-    public void addDish(String dish, int mass, int eating, String date){
+    public void addDish(String dish, int mass, int calories, int eating, String date){
         // Здесь получаем текущее время
         Date date1 = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
@@ -53,6 +53,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
 
         values.put(DatabaseInfo.COLUMN_DISH, dish);
         values.put(DatabaseInfo.COLUMN_MASS, mass);
+        values.put(DatabaseInfo.COLUMN_CALORIES, calories);
         values.put(DatabaseInfo.COLUMN_EATING, eating);
         values.put(DatabaseInfo.COLUMN_DATE, date);
         values.put(DatabaseInfo.COLUMN_TIME, time);
@@ -114,6 +115,7 @@ class GetDish extends Thread{
         String[] projection = {
                 DatabaseInfo.COLUMN_DISH,
                 DatabaseInfo.COLUMN_MASS,
+                DatabaseInfo.COLUMN_CALORIES,
                 DatabaseInfo.COLUMN_EATING,
                 DatabaseInfo.COLUMN_TIME
         };
@@ -155,6 +157,7 @@ class GetDish extends Thread{
         // Узнаем индекс каждого столбца
         int dishColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_DISH);
         int massColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_MASS);
+        int caloriesColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_CALORIES);
         int eatingColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_EATING);
         int timeColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_TIME);
 
@@ -169,8 +172,10 @@ class GetDish extends Thread{
             // Получаем данные из запроса
             String currentDish = cursor.getString(dishColumnIndex);
             String currentMass = Integer.toString(cursor.getInt(massColumnIndex));
+            String calories = Integer.toString(cursor.getInt(caloriesColumnIndex));
             int currentEating = cursor.getInt(eatingColumnIndex);
             String currentTime = cursor.getString(timeColumnIndex);
+
 
             if (_eating != currentEating){
                 result.put(_eating, dishResult);
@@ -182,7 +187,9 @@ class GetDish extends Thread{
 
             dishData.put("dish", currentDish);
             dishData.put("mass", currentMass);
+            dishData.put("calories", calories);
             dishData.put("time", currentTime);
+
 
             dishResult.add(dishData);
         }

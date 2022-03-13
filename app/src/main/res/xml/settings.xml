@@ -47,8 +47,10 @@
             android:title="Цвет оформления"
             app:iconSpaceReserved="false"
             app:summary="Изменение цветового акцента в приложении" />
+        <!--
         <com.example.journal.TimePreference
             android:key="timePicker"
             android:title="title"/>
+        -->
     </PreferenceCategory>
 </PreferenceScreen>

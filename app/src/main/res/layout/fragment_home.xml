@@ -68,13 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/breakfastBorder">
-                    <ListView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/breakfastList">
-                    </ListView>
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/breakfastBorder" />
 
                 <View
                     android:id="@+id/downBorderBreakfast"
@@ -135,13 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/lunchBorder">
-                    <ListView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/lunchList">
-                    </ListView>
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/lunchBorder" />
 
                 <View
                     android:id="@+id/downBorderLunch"
@@ -199,13 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/dinnerBorder" >
-                    <ListView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/dinnerList">
-                    </ListView>
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/dinnerBorder" />
 
                 <View
                     android:id="@+id/downBorderDinner"
@@ -266,13 +248,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@+id/otherBorder" >
-                    <ListView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/otherList">
-                    </ListView>
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/otherBorder" />
 
                 <View
                     android:id="@+id/downBorderOther"

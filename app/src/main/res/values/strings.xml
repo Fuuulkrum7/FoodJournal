@@ -11,6 +11,13 @@
         <item>Ужин</item>
         <item>Прочее</item>
     </string-array>
+    <string-array name="AvailableColors">
+        <item>Синий</item>
+        <item>Красный</item>
+        <item>Зеленый</item>
+        <item>Желтый</item>
+    </string-array>
+    <string name="settings_title">Настройки</string>
     <string name="title_activity_navigation">NavigationActivity</string>
     <string name="title_home">Главная</string>
     <string name="title_search">Поиск</string>

@@ -1,9 +1,11 @@
 package com.example.journal;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,6 +17,7 @@ public class EatingFragmentsController implements View.OnClickListener {
     // А здесь лежат нужные нам элементы интерфейса
     public Button addBreakfast, addLunch, addDinner, addOther;
     public LinearLayout breakfastContainer, lunchContainer, dinnerContainer, otherContainer;
+    public ListView breakfastList, lunchList, dinnerList, otherList;
     public String[] eating;
     public String date;
     Fragment activity;
@@ -64,6 +67,11 @@ public class EatingFragmentsController implements View.OnClickListener {
         dinnerContainer = (LinearLayout) view.findViewById(R.id.dinnerContainer);
         otherContainer = (LinearLayout) view.findViewById(R.id.otherContainer);
 
+        breakfastList = (ListView)view.findViewById(R.id.breakfastList);
+        lunchList = (ListView)view.findViewById(R.id.lunchList);
+        dinnerList = (ListView)view.findViewById(R.id.dinnerList);
+        otherList = (ListView)view.findViewById(R.id.otherList);
+
         addBreakfast = (Button) view.findViewById(R.id.addBreakfast);
         addLunch = (Button) view.findViewById(R.id.addLunch);
         addDinner = (Button) view.findViewById(R.id.addDinner);
@@ -111,7 +119,7 @@ public class EatingFragmentsController implements View.OnClickListener {
         return fragment;
     }
 
-    public void SetData(Map<Integer, List<Map<String, String>>> data){
+    public void SetData(Map<Integer, List<Dish>> data){
         LinearLayout[] linearLayouts = {
                 breakfastContainer, lunchContainer, dinnerContainer, otherContainer
         };
@@ -121,16 +129,33 @@ public class EatingFragmentsController implements View.OnClickListener {
         }
     }
 
-    private void parseMap(LinearLayout layout, List<Map<String, String>> dishes, int eat){
+    private void parseMap(LinearLayout layout, List<Dish> dishes, int eat){
         if (dishes == null)
             return;
-
-        for (Map<String, String> map: dishes){
+        DishAdapter adapter = new DishAdapter(layout.getContext(), dishes);
+        ListView view = null;
+        switch (eat)
+        {
+            case 0:
+                view = breakfastList;
+                break;
+            case 1:
+                view = lunchList;
+                break;
+            case 2:
+                view = dinnerList;
+                break;
+            case 3:
+                view = otherList;
+                break;
+        }
+        view.setAdapter(adapter);
+        /*for (Map<String, String> map: dishes){
             Bundle args = new Bundle();
             args.putString("dish", map.get("dish"));
             args.putString("mass", map.get("mass"));
             args.putString("calories", map.get("calories"));
             createFragment(layout.getId(), eat, args);
-        }
+        }*/
     }
 }

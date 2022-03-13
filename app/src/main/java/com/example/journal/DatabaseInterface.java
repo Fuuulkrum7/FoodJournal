@@ -165,7 +165,7 @@ class GetDish extends Thread{
         Map result = new HashMap<Integer, List>();
 
         int _eating = 0;
-        List<Map> dishResult = new ArrayList<Map>();
+        List<Dish> dishResult = new ArrayList<Dish>();
 
         // Пока в запросе ещё что-то есть
         while(cursor.moveToNext()) {
@@ -181,14 +181,9 @@ class GetDish extends Thread{
                 result.put(_eating, dishResult);
                 _eating = currentEating;
                 // Эта зараза при использовании clear чистит все и в словаре
-                dishResult = new ArrayList<Map>();
+                dishResult = new ArrayList<Dish>();
             }
-            Map dishData = new HashMap<String, String>();
-
-            dishData.put("dish", currentDish);
-            dishData.put("mass", currentMass);
-            dishData.put("calories", calories);
-            dishData.put("time", currentTime);
+            Dish dishData = new Dish(currentDish, Integer.parseInt(currentMass), Integer.parseInt(calories), currentTime);
 
 
             dishResult.add(dishData);

@@ -7,4 +7,44 @@
     android:layout_height="match_parent"
     android:background="@color/standart_background"
     android:orientation="vertical"
-    tools:context=".ui.settings.SettingsFragment" />
+    tools:context=".ui.settings.SettingsFragment">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Основные настройки"
+        android:textColor="@color/other_fg_def"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/cyan_900" />
+
+    <Switch
+        android:id="@+id/Reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="Напоминания"
+        android:textColor="@color/cyan_800"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/Timers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/cyan_900" />
+
+</LinearLayout>

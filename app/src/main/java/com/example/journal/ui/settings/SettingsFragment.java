@@ -1,6 +1,7 @@
 package com.example.journal.ui.settings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,13 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.journal.FoodTimer;
+import com.example.journal.JournalNotificationService;
+import com.example.journal.MainActivity;
 import com.example.journal.R;
+
+import java.util.ArrayList;
 
 public class SettingsFragment extends Fragment {
     // это будет именем файла настроек
@@ -41,25 +44,18 @@ public class SettingsFragment extends Fragment {
 
         // Получаем переключатель
         need_to_remind = (Switch) view.findViewById(R.id.Reminder);
+        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
 
         for (int i = 0; i < APP_PREFERENCES_TIMES.length; i++){
             // Создаем напоминалки (визуальные) и добавляем их
-            int hour = settings.getInt(APP_PREFERENCES_TIMES[i] + "hour", 8 + i * 6);
-            int minute = settings.getInt(APP_PREFERENCES_TIMES[i] + "minute", 0);
-            boolean isChecked = settings.getBoolean(APP_PREFERENCES_TIMES[i] + "checked", true);
-
-            times[i] = FoodTimer.newInstance(hour, minute, isChecked);
+            times[i] = FoodTimer.newInstance(i);
+            ft.add(R.id.Timers, times[i]);
         }
 
-        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-        ft.add(R.id.Timers, times[0]);
-        ft.add(R.id.Timers, times[1]);
-        ft.add(R.id.Timers, times[2]);
         ft.commit();
 
         // Если в настройках сохранено предыдущая информация по уведомлениям
         if (settings.contains(APP_PREFERENCES_REMINDER)){
-            Log.d("TEST", "here");
             need_to_remind.setChecked(settings.getBoolean(APP_PREFERENCES_REMINDER, true));
             if (need_to_remind.isChecked())
                 ((LinearLayout) view.findViewById(R.id.Timers)).setVisibility(View.VISIBLE);
@@ -86,37 +82,41 @@ public class SettingsFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        // Сохраняем все и вся
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(APP_PREFERENCES_REMINDER, need_to_remind.isChecked());
-        int id = 101;
+        boolean notify = need_to_remind.isChecked();
+        editor.putBoolean(APP_PREFERENCES_REMINDER, notify);
+        editor.apply();
+
+        if (notify)
+            startNotificationService();
+        super.onDestroyView();
+    }
+
+    protected void startNotificationService(){
+        // Сохраняем все и вся
+        ArrayList<Integer[]> allTimes = new ArrayList<>();
 
         for (int i = 0; i < APP_PREFERENCES_TIMES.length; i++){
-            String time = APP_PREFERENCES_TIMES[i];
             FoodTimer fragment = times[i];
-
-            editor.putBoolean(time + "checked", fragment.need_timer.isChecked());
-
-            if (fragment.need_timer.isChecked()){
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), "Дневник питания")
-                        .setSmallIcon(R.drawable.notebook)
-                        .setContentTitle("Напоминание")
-                        .setContentText("Пора заполнить дневник")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                NotificationManagerCompat notificationManager =
-                        NotificationManagerCompat.from(getActivity());
-                notificationManager.notify(id, builder.build());
-                id += 1;
-            }
+            boolean notifyUser = fragment.need_timer.isChecked();
 
             String[] timer = fragment.time.getText().toString().split(":");
             int hour = Integer.parseInt(timer[0]);
             int minute = Integer.parseInt(timer[1]);
 
-            editor.putInt(time + "hour", hour);
-            editor.putInt(time + "minute", minute);
+
+            if (notifyUser){
+                allTimes.add(new Integer[]{hour, minute});
+            }
         }
-        editor.apply();
-        super.onDestroyView();
+
+
+        Log.d(MainActivity.TAG, "running service...");
+        ArrayList<Integer[]> times = new ArrayList<>();
+        Intent serviceIntent = new Intent(getContext(), JournalNotificationService.class);
+        serviceIntent.putExtra("times", allTimes);
+
+        getActivity().startService(serviceIntent);
+
     }
 }

@@ -96,21 +96,28 @@ public class UserProfile implements Serializable {
         if (!onlineMode || !checkConnection())
         {
             return new UserProfile(name, password);
-        }
+        }//Как-то регаемся в онлайне.
         return null;
     }
 
-    protected static UserProfile getUserProfile(String name, boolean localSearch)
+    protected static UserProfile getUserProfile(String name)
     {
+        //Здесь пытаемся загрузить данные пользователя по имени.
+        // Именно для поиска (вдруг понадобится потом).
         return null;
     }
-
+    //Пара методов для паролей. Пароль состоит из 2 частей: хеш пароля и сид для генерации "полезной нагрузки", или "соли"
+    //"Соль" генерируется рандомайзером по определённому сиду. Сид заранее тоже генерируется, так что нагрузка не зависит от пользователя.
+    //Хеш создаётся из пароля через генератор хеш-функций.
+//Тут относительно всё легко, шифруем пароль по SHA-512 с указанным сидом для генерации данных в нагрузку.
     public static String encryptPassword(String password, long seed){
+        //Этап 1. Получаем сид в виде набора байт из обычного числа.
         byte[] seedArray = new byte[8];
         for (int i = 0; i < 8; i++){
             seedArray[i] = (byte)((seed >> i * 8) & 0xff);
         }
-        SecureRandom gen = new SecureRandom();
+        //Этап 2. Создаём данные для усложнения шифрования.
+        SecureRandom gen = new SecureRandom(seedArray);
         byte[] salt = new byte[16];
         gen.nextBytes(salt);
         MessageDigest md = null;
@@ -120,11 +127,12 @@ public class UserProfile implements Serializable {
             e.printStackTrace();
         }
         md.update(salt);
+        //Этап 3. Считаем хеш пароля.
         byte[] hash = md.digest(password.getBytes(StandardCharsets.UTF_8));
         String output = Base64.encodeToString(hash, Base64.DEFAULT);
         return output;
     }
-
+//Генерируем новый сид для пароля.
     public static long getSeedForEncryption(){
         SecureRandom gen = new SecureRandom();
         byte[] seed = gen.generateSeed(8);
@@ -134,7 +142,7 @@ public class UserProfile implements Serializable {
         }
         return res;
     }
-
+//Этот метод сохраняет данные пользователя в файл по адресу.
     public static void saveToFile(String path, UserProfile profile) throws IOException {
         FileOutputStream fileOutput = null;
         ObjectOutputStream objectOutput = null;
@@ -148,7 +156,7 @@ public class UserProfile implements Serializable {
             objectOutput.close();
         }
     }
-
+//А этот загружает их из файла.
     public static UserProfile loadFromFile(String path) throws IOException, ClassNotFoundException {
         FileInputStream inputStream = new FileInputStream(path);
         ObjectInputStream objectInput = new ObjectInputStream(inputStream);

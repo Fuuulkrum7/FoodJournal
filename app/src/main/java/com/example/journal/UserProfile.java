@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Random;
 
 import android.util.Base64;
 
@@ -61,7 +62,7 @@ public class UserProfile implements Serializable {
 
     public boolean changePassword(String old, String newPassword){
         String testOld = encryptPassword(old, saltSeed);
-        if (testOld == passwordHash){
+        if (testOld.equals(passwordHash)){
             saltSeed = getSeedForEncryption();
             passwordHash = encryptPassword(newPassword, saltSeed);
             if (checkConnection()) {
@@ -111,13 +112,8 @@ public class UserProfile implements Serializable {
     //Хеш создаётся из пароля через генератор хеш-функций.
 //Тут относительно всё легко, шифруем пароль по SHA-512 с указанным сидом для генерации данных в нагрузку.
     public static String encryptPassword(String password, long seed){
-        //Этап 1. Получаем сид в виде набора байт из обычного числа.
-        byte[] seedArray = new byte[8];
-        for (int i = 0; i < 8; i++){
-            seedArray[i] = (byte)((seed >> i * 8) & 0xff);
-        }
-        //Этап 2. Создаём данные для усложнения шифрования.
-        SecureRandom gen = new SecureRandom(seedArray);
+        //Этап 1. Создаём данные для усложнения шифрования.
+        Random gen = new Random(seed);
         byte[] salt = new byte[16];
         gen.nextBytes(salt);
         MessageDigest md = null;
@@ -127,7 +123,7 @@ public class UserProfile implements Serializable {
             e.printStackTrace();
         }
         md.update(salt);
-        //Этап 3. Считаем хеш пароля.
+        //Этап 2. Считаем хеш пароля.
         byte[] hash = md.digest(password.getBytes(StandardCharsets.UTF_8));
         String output = Base64.encodeToString(hash, Base64.DEFAULT);
         return output;

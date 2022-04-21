@@ -1,10 +1,12 @@
 package com.example.journal;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -50,11 +52,17 @@ public class JournalNotificationService extends Service {
                     AlarmManager alarmManager =  (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
                     Intent intent1 = new Intent(this, AlarmReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent1, PendingIntent.FLAG_CANCEL_CURRENT);
+                    @SuppressLint("UnspecifiedImmutableFlag")
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent1, 0);
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(System.currentTimeMillis());
+                    calendar.set(Calendar.HOUR_OF_DAY, time / 60);
+                    calendar.set(Calendar.MINUTE, time % 60);
 
                     alarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
-                            time * 60000L,
+                            calendar.getTimeInMillis(),
                             AlarmManager.INTERVAL_DAY,
                             pendingIntent
                     );

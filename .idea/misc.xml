@@ -18,6 +18,9 @@
         <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/layout/fragment_settings.xml" value="0.18" />
         <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/menu/home_page_menu.xml" value="0.19010416666666666" />
+        <entry key="app/src/main/res/drawable/small_switch.xml" value="0.326" />
+        <entry key="app/src/main/res/drawable/standart_switch.xml" value="0.326" />
+        <entry key="app/src/main/res/drawable/standart_switch_track.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dish_fragment.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/layout/eatig_fragment.xml" value="0.22269736842105264" />

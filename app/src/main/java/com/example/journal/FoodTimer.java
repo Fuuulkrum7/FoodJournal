@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -17,11 +16,12 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.journal.ui.settings.SettingsFragment;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class FoodTimer extends Fragment {
     private static SettingsFragment settingsFragment;
     public TextView time;
-    public Switch need_timer;
+    public SwitchMaterial need_timer;
     int number;
     SharedPreferences settings;
     int currentHour = 7;
@@ -61,7 +61,7 @@ public class FoodTimer extends Fragment {
         settings = getActivity().getSharedPreferences(SettingsFragment.APP_PREFERENCES, Context.MODE_PRIVATE);
 
         time = (TextView) view.findViewById(R.id.textTimerBreakfast);
-        need_timer = (Switch) view.findViewById(R.id.switchForBreakfast);
+        need_timer = (SwitchMaterial) view.findViewById(R.id.switchForBreakfast);
 
         number = getArguments().getInt("number");
         String name = SettingsFragment.APP_PREFERENCES_TIMES[number];

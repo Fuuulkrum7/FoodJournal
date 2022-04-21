@@ -1,37 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="cyan_200">#80DEEA</color>
-    <color name="cyan_300">#4DD0E1</color>
-    <color name="cyan_500">#0097A7</color>
-    <color name="cyan_800">#00838F</color>
-    <color name="cyan_900">#006064</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="background">#E0F7FA</color>
+    <color name="primary_main">#00838f</color>
+    <color name="primary_light">#4fb3bf</color>
+    <color name="primary_dark">#005662</color>
+    <color name="secondary_main">#00bcd4</color>
+    <color name="secondary_light">#62efff</color>
+    <color name="secondary_dark">#008ba3</color>
+    <color name="primary_text">#e0f7fa</color>
+    <color name="secondary_text">#003027</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="breakfast_bg_def">#80DEEA</color>
-    <color name="lunch_bg_def">#4FC3F7</color>
-    <color name="dinner_bg_def">#00C7FA</color>
-    <color name="other_bg_def">#18FFFF</color>
-    <color name="breakfast_fg_def">#006064</color>
-    <color name="lunch_fg_def">#01579B</color>
-    <color name="dinner_fg_def">#01579B</color>
-    <color name="other_fg_def">#00838F</color>
-    <color name="standart_background">#E0F7FA</color>
-    <color name="dish_button">#26C6DA</color>
-    <color name="dish_button_text">#006064</color>
-
-    <array name="EatingBgColors">
-        <item>#80DEEA</item>
-        <item>#4FC3F7</item>
-        <item>#00C7FA</item>
-        <item>#18FFFF</item>
-    </array>
-
-    <array name="EatingTextColors">
-        <item>#006064</item>
-        <item>#01579B</item>
-        <item>#01579B</item>
-        <item>#00B8D4</item>
-    </array>
 </resources>

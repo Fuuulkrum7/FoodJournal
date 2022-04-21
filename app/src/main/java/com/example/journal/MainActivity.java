@@ -1,6 +1,6 @@
 package com.example.journal;
 
-import android.app.ActivityManager;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,12 +26,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements ActivityResultCallback<ScanIntentResult> {
     // Некоторые статические перемнные, в частности контекст и разное время птитания
+    @SuppressLint("StaticFieldLeak")
     private static Context context;
     public static final String TAG = "JournalMain";
 
-    private BottomNavigationView.OnItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnItemSelectedListener() {
 
+        @SuppressLint("NonConstantResourceId")
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
@@ -70,8 +72,7 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
         SharedPreferences settings = getSharedPreferences(SettingsFragment.APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        if (!serviceIsRunning(JournalNotificationService.class) &&
-                settings.getBoolean(SettingsFragment.APP_PREFERENCES_REMINDER, false)){
+        if (settings.getBoolean(SettingsFragment.APP_PREFERENCES_REMINDER, false)){
             Log.d(TAG, "running service...");
             ArrayList<Integer> times = new ArrayList<>();
 
@@ -104,15 +105,5 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
     // Метод для получения контекста
     public static Context getContext() {
         return MainActivity.context;
-    }
-
-    private boolean serviceIsRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

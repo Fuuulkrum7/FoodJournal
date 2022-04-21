@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -22,6 +21,7 @@ import com.example.journal.FoodTimer;
 import com.example.journal.JournalNotificationService;
 import com.example.journal.MainActivity;
 import com.example.journal.R;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public class SettingsFragment extends Fragment {
     public static final String[] APP_PREFERENCES_TIMES = new String[]{"breakfast_", "lunch_", "dinner_"};
 
     // Надо ли включать напоминалку
-    Switch need_to_remind;
+    SwitchMaterial need_to_remind;
     // Получаем доступ к сохраненным данным в настройках
     SharedPreferences settings;
     FoodTimer[] times = new FoodTimer[3];
@@ -45,7 +45,7 @@ public class SettingsFragment extends Fragment {
         settings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         // Получаем переключатель
-        need_to_remind = (Switch) view.findViewById(R.id.Reminder);
+        need_to_remind = (SwitchMaterial) view.findViewById(R.id.Reminder);
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
 
         for (int i = 0; i < APP_PREFERENCES_TIMES.length; i++){

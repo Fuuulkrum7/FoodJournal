@@ -10,7 +10,7 @@
         android:layout_width="363dp"
         android:layout_height="39dp"
         android:text="8:00"
-        android:textColor="@color/cyan_800"
+        android:textColor="@color/secondary_text"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/switchForBreakfast"
@@ -19,10 +19,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.013" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switchForBreakfast"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="32dp"
+        android:thumb="@drawable/small_switch"
+        app:track="@drawable/standart_switch_track"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

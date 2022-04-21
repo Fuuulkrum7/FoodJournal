@@ -5,7 +5,7 @@
     android:id="@+id/containerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/standart_background"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context=".ui.settings.SettingsFragment">
 
@@ -14,30 +14,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Основные настройки"
-        android:textColor="@color/other_fg_def"
-        android:textSize="16sp" />
+        android:textColor="@color/secondary_text"
+        android:textSize="18dp" />
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/cyan_900" />
+        android:background="@color/secondary_dark" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/Reminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:text="Напоминания"
-        android:textColor="@color/cyan_800"
-        android:textSize="18sp" />
+        android:textColor="@color/secondary_text"
+        android:textSize="20sp"
+        android:thumb="@drawable/standart_switch"
+        app:track="@drawable/standart_switch_track" />
 
     <LinearLayout
         android:id="@+id/Timers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
     </LinearLayout>
 
@@ -45,6 +47,6 @@
         android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/cyan_900" />
+        android:background="@color/secondary_dark" />
 
 </LinearLayout>

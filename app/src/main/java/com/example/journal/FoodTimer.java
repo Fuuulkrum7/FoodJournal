@@ -3,19 +3,23 @@ package com.example.journal;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.example.journal.ui.settings.SettingsFragment;
 
 public class FoodTimer extends Fragment {
+    private static SettingsFragment settingsFragment;
     public TextView time;
     public Switch need_timer;
     int number;
@@ -25,6 +29,7 @@ public class FoodTimer extends Fragment {
 
     TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             time.setText(hourOfDay / 10 + "" + hourOfDay % 10 + ":" + minute / 10 + "" + minute % 10);
@@ -33,16 +38,21 @@ public class FoodTimer extends Fragment {
             currentHour = hourOfDay;
             currentMinute = minute;
 
-            String name = SettingsFragment.APP_PREFERENCES_TIMES[number];
+            saveData();
 
-            // Сохраняем время
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean(name + "checked", need_timer.isChecked());
-            editor.putInt(name + "hour", currentHour);
-            editor.putInt(name + "minute", currentMinute);
-            editor.apply();
+            settingsFragment.startNotificationService();
         }
     };
+
+    private void saveData(){
+        String name = SettingsFragment.APP_PREFERENCES_TIMES[number];
+        // Сохраняем время
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(name + "checked", need_timer.isChecked());
+        editor.putInt(name + "hour", currentHour);
+        editor.putInt(name + "minute", currentMinute);
+        editor.apply();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -72,12 +82,19 @@ public class FoodTimer extends Fragment {
             }
         });
 
+        need_timer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                saveData();
+            }
+        });
+
         return view;
     }
 
-    public static FoodTimer newInstance(int num){
+    public static FoodTimer newInstance(int num, SettingsFragment sFragment){
         FoodTimer foodTimer = new FoodTimer();
-
+        settingsFragment = sFragment;
         Bundle args = new Bundle();
         args.putInt("number", num);
 

@@ -8,9 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,24 +37,9 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     }
 
     // Добавляем блюдо в бд
-    public void addDish(String dish, int mass, int calories, int eating, String date){
-        // Здесь получаем текущее время
-        Date date1 = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-        String time = formatter.format(date1);
-
+    public void addData(ContentValues values){
         // Получаем бд для записи данных
         SQLiteDatabase db = this.getWritableDatabase();
-
-        // Здесь будут данные для добавления в бд
-        ContentValues values = new ContentValues();
-
-        values.put(DatabaseInfo.COLUMN_DISH, dish);
-        values.put(DatabaseInfo.COLUMN_MASS, mass);
-        values.put(DatabaseInfo.COLUMN_CALORIES, calories);
-        values.put(DatabaseInfo.COLUMN_EATING, eating);
-        values.put(DatabaseInfo.COLUMN_DATE, date);
-        values.put(DatabaseInfo.COLUMN_TIME, time);
 
         AddDish adder = new AddDish(values, db);
         adder.start();
@@ -84,7 +67,7 @@ class AddDish extends Thread{
     public void run(){
         // Добавляем в бд
         try {
-            long newRowId = db.insert(DatabaseInfo.TABLE_NAME, null, values);
+            db.insert(DatabaseInfo.TABLE_NAME, null, values);
         }
         // Если что-то пошло не так, то вот
         catch (Exception e){

@@ -73,20 +73,22 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
         if (!serviceIsRunning(JournalNotificationService.class) &&
                 settings.getBoolean(SettingsFragment.APP_PREFERENCES_REMINDER, false)){
             Log.d(TAG, "running service...");
-            ArrayList<Integer[]> times = new ArrayList<>();
+            ArrayList<Integer> times = new ArrayList<>();
+
             Intent serviceIntent = new Intent(this, JournalNotificationService.class);
             int startTime = 8;
             for (String time: SettingsFragment.APP_PREFERENCES_TIMES
                  ) {
                 if (settings.getBoolean(time + "checked", false))
-                    times.add(new Integer[]{
-                            settings.getInt(time + "hour", startTime),
-                            settings.getInt(time + "minute", 0)
-                    });
+                    times.add(
+                            settings.getInt(time + "hour", startTime) * 60 +
+                                    settings.getInt(time + "minute", 0)
+                    );
 
                 startTime += 6;
             }
             serviceIntent.putExtra("times", times);
+            stopService(new Intent(this, JournalNotificationService.class));
             startService(serviceIntent);
         }
 

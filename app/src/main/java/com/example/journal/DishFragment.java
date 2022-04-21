@@ -1,5 +1,6 @@
 package com.example.journal;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DishFragment extends Fragment implements View.OnClickListener {
     Button addDish;
@@ -93,7 +97,22 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                 // натуральным числом. И ввели ли что-то в поле "блюдо"
                 if (isNatural(s_mass) && isNatural(s_calories) && current_dish.length() > 0){
                     // Добавляем блюдо в бд
-                    database.addDish(current_dish, Integer.parseInt(s_mass), Integer.parseInt(s_calories), eating_index, date);
+                    // Здесь будут данные для добавления в бд
+                    ContentValues values = new ContentValues();
+
+                    // Здесь получаем текущее время
+                    Date date1 = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+                    String time = formatter.format(date1);
+
+                    values.put(DatabaseInfo.COLUMN_DISH, current_dish);
+                    values.put(DatabaseInfo.COLUMN_MASS, Integer.parseInt(s_mass));
+                    values.put(DatabaseInfo.COLUMN_CALORIES, Integer.parseInt(s_calories));
+                    values.put(DatabaseInfo.COLUMN_EATING, eating_index);
+                    values.put(DatabaseInfo.COLUMN_DATE, date);
+                    values.put(DatabaseInfo.COLUMN_TIME, time);
+
+                    database.addData(values);
 
                     //
                     disable();

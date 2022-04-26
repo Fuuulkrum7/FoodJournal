@@ -36,6 +36,7 @@ public class JournalNotificationService extends Service {
         Log.d(MainActivity.TAG, "onCreate Intent");
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -48,19 +49,35 @@ public class JournalNotificationService extends Service {
             if (!times.isEmpty()){
                 Collections.sort(times);
 
-                for (int time: times){
+                for (int i = 0; i < times.size(); i++){
+                    int time = times.get(i);
                     AlarmManager alarmManager =  (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
                     Intent intent1 = new Intent(this, AlarmReceiver.class);
                     @SuppressLint("UnspecifiedImmutableFlag")
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent1, 0);
+                    PendingIntent pendingIntent = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        pendingIntent = PendingIntent.getBroadcast(
+                                this,
+                                i,
+                                intent1,
+                                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+                    }
+                    else {
+                        pendingIntent = PendingIntent.getBroadcast(
+                                this,
+                                i,
+                                intent1,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(System.currentTimeMillis());
                     calendar.set(Calendar.HOUR_OF_DAY, time / 60);
                     calendar.set(Calendar.MINUTE, time % 60);
+                    calendar.set(Calendar.SECOND, 0);
 
-                    alarmManager.setRepeating(
+                    alarmManager.setWindow(
                             AlarmManager.RTC_WAKEUP,
                             calendar.getTimeInMillis(),
                             AlarmManager.INTERVAL_DAY,

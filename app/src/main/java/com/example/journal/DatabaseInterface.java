@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class DatabaseInterface extends SQLiteOpenHelper {
     // Данные по бд
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "LocalJournal.db";
 
     // Инициализация, ничего интересного
@@ -26,7 +26,8 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     // При создании бд
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DatabaseInfo.SQL_CREATE_ENTRIES);
+        db.execSQL(DatabaseInfo.SQL_CREATE_JOURNAL);
+        db.execSQL(DatabaseInfo.SQL_CREATE_USER);
     }
 
     // При апдейте бд, а вдруг что-то сильно поменялось. В будущем доработать
@@ -102,7 +103,8 @@ class GetDish extends Thread{
                 DatabaseInfo.COLUMN_MASS,
                 DatabaseInfo.COLUMN_CALORIES,
                 DatabaseInfo.COLUMN_EATING,
-                DatabaseInfo.COLUMN_TIME
+                DatabaseInfo.COLUMN_TIME,
+                DatabaseInfo.COLUMN_ID
         };
 
 
@@ -145,6 +147,7 @@ class GetDish extends Thread{
         int caloriesColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_CALORIES);
         int eatingColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_EATING);
         int timeColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_TIME);
+        int idColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_ID);
 
         // Словарь, оно же хеш-таблица для наших данных
         Map<Integer, List<Map<String, String>>> result = new HashMap<Integer, List<Map<String, String>>>();
@@ -160,6 +163,7 @@ class GetDish extends Thread{
             String calories = Integer.toString(cursor.getInt(caloriesColumnIndex));
             int currentEating = cursor.getInt(eatingColumnIndex);
             String currentTime = cursor.getString(timeColumnIndex);
+            String id = Integer.toString(cursor.getInt(idColumnIndex));
 
 
             if (_eating != currentEating){
@@ -174,7 +178,7 @@ class GetDish extends Thread{
             dishData.put("mass", currentMass);
             dishData.put("calories", calories);
             dishData.put("time", currentTime);
-
+            dishData.put("id", id);
 
             dishResult.add(dishData);
         }
@@ -190,13 +194,15 @@ class GetDish extends Thread{
     Выглядит так
 
     {
-    ""ТЕКУЩЕЕ ВРЕМЯ ПРИЕМА ЕДЫ": [
+    "ТЕКУЩЕЕ ВРЕМЯ ПРИЕМА ЕДЫ": [
             {
+                "id": "0",
                 "dish": "борщ",
                 "mass": "300",
                 "time": "20:10:23"
             },
             {
+                "id": "1",
                 "dish": "Чай",
                 "mass": "350",
                 "time": "01.12.59"

@@ -20,6 +20,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     EditText mass, dish, calories;
     DatabaseInterface database;
     String date;
+    int id;
 
     // Индекс выбранного времени пищи (дабы сразу при выборе его сохранять в таком виде)
     // Как-никак, в бд значение этой переменной является числом для удобства сортировки
@@ -50,6 +51,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                     getArguments().getString("mass"),
                     getArguments().getString("calories")
             );
+            id = getArguments().getInt("id");
             disable();
         }
 

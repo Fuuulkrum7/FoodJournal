@@ -5,7 +5,7 @@ import android.provider.BaseColumns;
 // Просто данные по бд, какие тут ещё нужны пояснения
 final class DatabaseInfo implements BaseColumns {
     public static final String JOURNAL_TABLE = "journal";
-    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_ID = "local_id";
     public static final String COLUMN_DISH = "dish";
     public static final String COLUMN_MASS = "mass";
     public static final String COLUMN_EATING = "eating";
@@ -17,7 +17,7 @@ final class DatabaseInfo implements BaseColumns {
     public static final String COLUMN_LOGIN = "login";
     public static final String COLUMN_PASSWORD = "password";
     public static final String COLUMN_USER_ID = "user_id";
-    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_NAME = "username";
 
     static final String SQL_CREATE_JOURNAL =
             "CREATE TABLE " + JOURNAL_TABLE + " (" +

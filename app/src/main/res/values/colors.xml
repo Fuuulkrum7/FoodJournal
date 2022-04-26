@@ -11,4 +11,11 @@
     <color name="secondary_text">#003027</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryColor">#003233</color>
+    <color name="primaryLightColor">#305c5c</color>
+    <color name="primaryDarkColor">#000c0c</color>
+    <color name="secondaryColor">#00796b</color>
+    <color name="secondaryLightColor">#48a999</color>
+    <color name="secondaryDarkColor">#004c40</color>
 </resources>

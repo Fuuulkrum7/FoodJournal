@@ -37,11 +37,11 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     }
 
     // Добавляем блюдо в бд
-    public void addData(ContentValues values){
+    public void addData(ContentValues values, String table){
         // Получаем бд для записи данных
         SQLiteDatabase db = this.getWritableDatabase();
 
-        AddDish adder = new AddDish(values, db);
+        AddDish adder = new AddDish(values, db, table);
         adder.start();
     }
 
@@ -57,17 +57,19 @@ public class DatabaseInterface extends SQLiteOpenHelper {
 class AddDish extends Thread{
     private ContentValues values;
     SQLiteDatabase db;
+    String table;
 
-    public AddDish(ContentValues values, SQLiteDatabase db){
+    public AddDish(ContentValues values, SQLiteDatabase db, String table){
         this.values = values;
         this.db = db;
+        this.table = table;
     }
 
     @Override
     public void run(){
         // Добавляем в бд
         try {
-            db.insert(DatabaseInfo.TABLE_NAME, null, values);
+            db.insert(table, null, values);
         }
         // Если что-то пошло не так, то вот
         catch (Exception e){
@@ -116,7 +118,7 @@ class GetDish extends Thread{
         try {
             // Делаем запрос
             cursor = db.query(
-                    DatabaseInfo.TABLE_NAME,
+                    DatabaseInfo.JOURNAL_TABLE,
                     projection,
                     selection,
                     null,
@@ -145,10 +147,10 @@ class GetDish extends Thread{
         int timeColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_TIME);
 
         // Словарь, оно же хеш-таблица для наших данных
-        Map result = new HashMap<Integer, List>();
+        Map<Integer, List<Map<String, String>>> result = new HashMap<Integer, List<Map<String, String>>>();
 
         int _eating = 0;
-        List<Map> dishResult = new ArrayList<Map>();
+        List<Map<String, String>> dishResult = new ArrayList<Map<String, String>>();
 
         // Пока в запросе ещё что-то есть
         while(cursor.moveToNext()) {
@@ -164,9 +166,9 @@ class GetDish extends Thread{
                 result.put(_eating, dishResult);
                 _eating = currentEating;
                 // Эта зараза при использовании clear чистит все и в словаре
-                dishResult = new ArrayList<Map>();
+                dishResult = new ArrayList<Map<String, String>>();
             }
-            Map dishData = new HashMap<String, String>();
+            Map<String, String> dishData = new HashMap<String, String>();
 
             dishData.put("dish", currentDish);
             dishData.put("mass", currentMass);

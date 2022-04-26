@@ -111,8 +111,9 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                     values.put(DatabaseInfo.COLUMN_EATING, eating_index);
                     values.put(DatabaseInfo.COLUMN_DATE, date);
                     values.put(DatabaseInfo.COLUMN_TIME, time);
+                    Log.d(MainActivity.TAG, time);
 
-                    database.addData(values);
+                    database.addData(values, DatabaseInfo.JOURNAL_TABLE);
 
                     //
                     disable();

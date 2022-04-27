@@ -9,22 +9,39 @@
             die("Connection failed: " . $mysqli->connect_error);
         }
 
-        $stmt = $mysqli->prepare("SELECT local_id, dish, mass, calories, calories, eating, time FROM VALUES WHERE date=? AND user_id=? ORDER BY eating ASC");
+        $stmt = $mysqli->prepare("SELECT local_id, dish, mass, calories, eating, time FROM VALUES WHERE date=? AND user_id=? ORDER BY eating ASC");
         $stmt->bind_param("si", $date, $user_id);
 
         $stmt->execute();
 
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-
         $data = array();
+        $dishes = array();
         $current_eating = "";
 
-        for ($i = 0; $i < count($row); $i++){
-            
-        }
+        $result = $stmt->get_result();
 
-        echo "200";
+        if ($result->num_rows > 0){
+            while ($row = $result->fetch_assoc()) {
+                if ($current_eating == "") {
+                    $current_eating = $row["eating"];
+                }
+
+                if ($current_eating != $row["eating"]) {
+                    $data[intval($current_eating)] == $dishes;
+
+                    unset($dishes);
+                    $dishes = array();
+                }
+
+                $dishes["local_id"] = intval($row["local_id"]);
+                $dishes["dish"] = $row["dish"];
+                $dishes["mass"] = intval($row["mass"]);
+                $dishes["calories"] = intval($row["calories"]);
+                $dishes["time"] = $row["time"];
+            }
+        }        
+
+        echo json_encode($data);
     }
     else {
         echo "400";

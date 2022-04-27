@@ -2,6 +2,7 @@ package com.example.journal.ui.home;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -85,7 +86,8 @@ public class HomeFragment extends Fragment {
         );
 
         Date date1 = new Date();
-        String date = (new SimpleDateFormat("dd.MM.yyyy")).format(date1);
+        @SuppressLint("SimpleDateFormat")
+        String date = (new SimpleDateFormat("yyyy-dd-MM")).format(date1);
 
         // Получаем все и вся
         controller.setData(view);

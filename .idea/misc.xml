@@ -34,7 +34,9 @@
         <entry key="app/src/main/res/layout/login.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/layout/login_fragment.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/layout/my_timer.xml" value="0.35260416666666666" />
+        <entry key="app/src/main/res/layout/registration_fragment.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.35260416666666666" />
+        <entry key="app/src/main/res/menu/edit_menu.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/menu/friends_page_menu.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/menu/home_page_menu.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/menu/login_menu.xml" value="0.35260416666666666" />

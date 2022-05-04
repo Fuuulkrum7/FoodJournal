@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loginConstraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".LoginFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditText
-        android:id="@+id/login"
+        android:id="@+id/login_reg"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -24,7 +21,7 @@
         app:layout_constraintVertical_bias="0.404" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/password_reg"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -35,34 +32,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login"
+        app:layout_constraintTop_toBottomOf="@+id/login_reg"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
-        android:id="@+id/enter"
+
+    <EditText
+        android:id="@+id/username_reg"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:text="Войти"
-        android:textColor="@color/primary_text"
-        android:textColorHighlight="@color/secondary_main"
+        android:ems="10"
+        android:hint="Имя пользователя"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/password_reg"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/registration_reg"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:text="Регистрация"
+        android:text="Зарегестрироваться"
         android:textColor="@color/primary_text"
         android:textColorHighlight="@color/secondary_main"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.159" />
+        app:layout_constraintTop_toBottomOf="@+id/username_reg"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

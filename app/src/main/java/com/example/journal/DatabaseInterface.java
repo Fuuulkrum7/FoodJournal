@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,7 +19,7 @@ import java.util.Map;
 
 public class DatabaseInterface extends SQLiteOpenHelper {
     // Данные по бд
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "LocalJournal.db";
 
     // Инициализация, ничего интересного
@@ -49,6 +51,14 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         adder.start();
     }
 
+    public void addUser(ContentValues values){
+        // Получаем бд для записи данных
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        AddUser adder = new AddUser(values, db);
+        adder.start();
+    }
+
     // Соответсвтвенно, получем блюда
     public void getDishes(String date, EatingFragmentsController controller){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -56,13 +66,13 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         getDish.start();
     }
 
-    public void getUser(String login, String password, LoginFragment fragment){
+    public void checkUser(String login, String password, LoginFragment fragment){
         SQLiteDatabase db = this.getReadableDatabase();
 
         try {
             password = getSSH512(password);
-            GetUser getUser = new GetUser(db, login, password, fragment);
-            getUser.start();
+            CheckUser checkUser = new CheckUser(db, login, password, fragment);
+            checkUser.start();
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -79,54 +89,8 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         }
         return sb.toString();
     }
-}
 
-
-class AddData extends Thread{
-    private ContentValues values;
-    SQLiteDatabase db;
-    String table;
-
-    public AddData(ContentValues values, SQLiteDatabase db, String table){
-        this.values = values;
-        this.db = db;
-        this.table = table;
-    }
-
-    @Override
-    public void run(){
-        // Добавляем в бд
-        try {
-            db.insert(table, null, values);
-        }
-        // Если что-то пошло не так, то вот
-        catch (Exception e){
-            Log.d("TEST", e.toString());
-            Toast toast = Toast.makeText(MainActivity.getContext(),
-                    "Не удалось добавить данные", Toast.LENGTH_SHORT);
-
-            toast.show();
-        }
-    }
-}
-
-
-class GetUser extends Thread {
-    SQLiteDatabase db;
-    String login;
-    String password;
-    LoginFragment loginFragment;
-
-    public GetUser(SQLiteDatabase db, String login, String password, LoginFragment loginFragment){
-        this.db = db;
-        this.login = login;
-        this.password = password;
-        this.loginFragment = loginFragment;
-    }
-
-    @Override
-    public void run() {
-        // Зададим условие для выборки - список столбцов
+    protected static Cursor find_user(String login, SQLiteDatabase db) {
         String[] projection = {
                 DatabaseInfo.COLUMN_PASSWORD
         };
@@ -156,6 +120,115 @@ class GetUser extends Thread {
                     "Не удалось получить данные", Toast.LENGTH_SHORT);
 
             toast.show();
+            return null;
+        }
+
+        return cursor;
+    }
+}
+
+
+class AddUser extends Thread{
+    protected ContentValues values;
+    SQLiteDatabase db;
+    String table;
+
+    public AddUser(ContentValues values, SQLiteDatabase db){
+        this.values = values;
+        this.db = db;
+        this.table = DatabaseInfo.USER_TABLE;
+    }
+
+    @Override
+    public void run(){
+        Cursor cursor = DatabaseInterface.find_user(values.getAsString("login"), db);
+
+        Context context = MainActivity.getContext();
+        if (context == null) {
+            context = LoginFragment.getContext();
+        }
+        if (cursor == null)
+            return;
+
+        else if (cursor.getCount() != 0){
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Context context = MainActivity.getContext();
+                    if (context == null) {
+                        context = LoginFragment.getContext();
+                    }
+
+                    Toast.makeText(context, "Пользователь уже есть", Toast.LENGTH_SHORT).show();
+                }
+            });
+            return;
+        }
+
+        values.put("password", values.getAsString("password"));
+
+        // Добавляем в бд
+        try {
+            db.insert(table, null, values);
+        }
+        // Если что-то пошло не так, то вот
+        catch (Exception e){
+            Log.d("TEST", e.toString());
+            Toast toast = Toast.makeText(context,
+                    "Не удалось добавить данные", Toast.LENGTH_SHORT);
+
+            toast.show();
+        }
+    }
+}
+
+
+class AddData extends Thread{
+    protected ContentValues values;
+    SQLiteDatabase db;
+    String table;
+
+    public AddData(ContentValues values, SQLiteDatabase db, String table){
+        this.values = values;
+        this.db = db;
+        this.table = table;
+    }
+
+    @Override
+    public void run(){
+        // Добавляем в бд
+        try {
+            db.insert(table, null, values);
+        }
+        // Если что-то пошло не так, то вот
+        catch (Exception e){
+            Log.d("TEST", e.toString());
+            Toast toast = Toast.makeText(MainActivity.getContext(),
+                    "Не удалось добавить данные", Toast.LENGTH_SHORT);
+
+            toast.show();
+        }
+    }
+}
+
+
+class CheckUser extends Thread {
+    SQLiteDatabase db;
+    String login;
+    String password;
+    LoginFragment loginFragment;
+
+    public CheckUser(SQLiteDatabase db, String login, String password, LoginFragment loginFragment){
+        this.db = db;
+        this.login = login;
+        this.password = password;
+        this.loginFragment = loginFragment;
+    }
+
+    @Override
+    public void run() {
+        Cursor cursor = DatabaseInterface.find_user(login, db);
+        if (cursor == null){
             return;
         }
 
@@ -258,6 +331,9 @@ class GetDish extends Thread{
             String currentTime = cursor.getString(timeColumnIndex);
             String id = Integer.toString(cursor.getInt(idColumnIndex));
 
+            if (_eating == 0){
+                _eating = currentEating;
+            }
 
             if (_eating != currentEating){
                 result.put(_eating, dishResult);

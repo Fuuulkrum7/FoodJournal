@@ -13,6 +13,7 @@ final class DatabaseInfo implements BaseColumns {
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_TIME = "time";
     public static final String COLUMN_TIME_ADD = "time_add";
+    public static final String COLUMN_STATUS = "status";
     public static final String USER_TABLE = "user";
     public static final String COLUMN_LOGIN = "login";
     public static final String COLUMN_PASSWORD = "password";
@@ -28,7 +29,7 @@ final class DatabaseInfo implements BaseColumns {
                     COLUMN_CALORIES + " TEXT, " +
                     COLUMN_DATE + " TEXT, " +
                     COLUMN_TIME + " TEXT, " +
-                    COLUMN_USER_ID + " INTEGER DEFAULT 0, " +
+                    COLUMN_STATUS + " INTEGER DEFAULT 0, " +
                     COLUMN_TIME_ADD + " TEXT);";
 
     static final String SQL_CREATE_USER =

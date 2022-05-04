@@ -1,40 +1,46 @@
 package com.example.journal;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
-public class LoginFragment extends Fragment implements View.OnClickListener {
+public class LoginFragment extends AppCompatActivity implements View.OnClickListener {
     Button enter;
     Button registration;
     EditText password;
     EditText login;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.login_fragment, container, false);
+    @SuppressLint("StaticFieldLeak")
+    private static Context context;
 
-        login = (EditText) view.findViewById(R.id.login);
-        password = (EditText) view.findViewById(R.id.password);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.login_fragment);
 
-        enter = (Button) view.findViewById(R.id.enter);
-        registration = (Button) view.findViewById(R.id.registration);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        login = (EditText) findViewById(R.id.login);
+        password = (EditText) findViewById(R.id.password);
+
+        enter = (Button) findViewById(R.id.enter);
+        registration = (Button) findViewById(R.id.registration_reg);
 
         enter.setOnClickListener(this);
         registration.setOnClickListener(this);
-        return view;
+
+        // Сохраняем контекст
+        LoginFragment.context = getApplicationContext();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -46,49 +52,36 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 String p = password.getText().toString();
                 Log.d(MainActivity.TAG, p + l.length());
                 if (l.length() > 0 && p.length() > 0){
-                    DatabaseInterface databaseInterface = new DatabaseInterface(getContext());
-                    databaseInterface.getUser(
+                    DatabaseInterface databaseInterface = new DatabaseInterface(this);
+                    databaseInterface.checkUser(
                             l,
                             p,
                             this);
                 }
                 else {
-                    Toast.makeText(getContext(), "Введите логин и пароль", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Введите логин и пароль", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.registration:
-                break;
+            case R.id.registration_reg:
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                RegistrationFragment rf = new RegistrationFragment();
+                fragmentTransaction.replace(android.R.id.content, rf)
+                        .attach(rf)
+                        .addToBackStack(null)
+                        .commit();
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainActivity activity = (MainActivity)getActivity();
-        if (activity != null) {
-            activity.showUpButton();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        MainActivity activity = (MainActivity)getActivity();
-        if (activity != null) {
-            activity.hideUpButton();
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                ((MainActivity)getActivity()).onBackPressed();
-                onDestroy();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            if (getFragmentManager().getBackStackEntryCount() > 0) {
+                getFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onUserFound(boolean equals){
@@ -97,13 +90,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(MainActivity.getContext(), "No user found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No user found", Toast.LENGTH_SHORT).show();
                 }
             });
         }
-        else {
-
-        }
     }
 
+
+    // Метод для получения контекста
+    public static Context getContext() {
+        return LoginFragment.context;
+    }
 }

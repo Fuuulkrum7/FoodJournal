@@ -24,7 +24,7 @@
 
         <receiver android:name=".AlarmReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"
@@ -36,6 +36,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".LoginFragment"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

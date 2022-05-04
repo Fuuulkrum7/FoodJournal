@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.journal.FoodTimer;
 import com.example.journal.JournalNotificationService;
+import com.example.journal.LoginFragment;
 import com.example.journal.MainActivity;
 import com.example.journal.R;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -55,7 +56,8 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    
+                    Intent intent = new Intent(getContext(), LoginFragment.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -120,7 +122,13 @@ public class SettingsFragment extends Fragment {
         ArrayList<Integer> allTimes = new ArrayList<>();
         for (int i = 0; i < APP_PREFERENCES_TIMES.length; i++){
             FoodTimer fragment = times[i];
-            boolean notifyUser = fragment.need_timer.isChecked();
+            boolean notifyUser;
+            try {
+                notifyUser = fragment.need_timer.isChecked();
+            }
+            catch (Exception e){
+                return;
+            }
 
             String[] timer = fragment.time.getText().toString().split(":");
             int hour = Integer.parseInt(timer[0]);

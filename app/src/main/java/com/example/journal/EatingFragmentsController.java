@@ -116,6 +116,13 @@ public class EatingFragmentsController implements View.OnClickListener {
                 breakfastContainer, lunchContainer, dinnerContainer, otherContainer
         };
 
+        /*
+        Gson gson = new Gson();
+        String gsonString = gson.toJson(data);
+
+        Так переводим наши блюда в json
+         */
+
         for (int i = 0; i < linearLayouts.length; i++){
             parseMap(linearLayouts[i], data.get(i), i);
         }

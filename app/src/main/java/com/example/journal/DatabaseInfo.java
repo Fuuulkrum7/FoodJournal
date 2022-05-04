@@ -32,14 +32,17 @@ final class DatabaseInfo implements BaseColumns {
                     COLUMN_TIME_ADD + " TEXT);";
 
     static final String SQL_CREATE_USER =
-            "CREATE TABLE " + USER_TABLE + " (" +
+            "CREATE TABLE IF NOT EXISTS " + USER_TABLE + " (" +
                     COLUMN_USER_ID + " INTEGER DEFAULT 0, " +
                     COLUMN_NAME + " TEXT, " +
                     COLUMN_LOGIN + " TEXT, " +
                     COLUMN_PASSWORD + " TEXT);";
 
-    static final String SQL_DELETE_ENTRIES =
+    static final String SQL_DELETE_JOURNAL =
             "DROP TABLE IF EXISTS " + JOURNAL_TABLE;
+
+    static final String SQL_DELETE_USER =
+            "DROP TABLE IF EXISTS " + USER_TABLE;
 
     private DatabaseInfo() {}
 }

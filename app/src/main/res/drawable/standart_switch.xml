@@ -5,8 +5,6 @@
             <solid android:color="@color/secondary_main"/>
             <size android:height="24dp"
                 android:width="24dp"/>
-            <stroke android:width="2dp"
-                android:color="@color/primary_dark"/>
         </shape>
     </item>
     <item android:state_checked="true">
@@ -14,8 +12,6 @@
             <solid android:color="@color/secondary_light"/>
             <size android:height="24dp"
                 android:width="24dp"/>
-            <stroke android:width="2dp"
-                android:color="@color/primary_dark"/>
         </shape>
     </item>
 </selector>

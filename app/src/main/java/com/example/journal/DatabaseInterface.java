@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +35,8 @@ public class DatabaseInterface extends SQLiteOpenHelper {
     // При апдейте бд, а вдруг что-то сильно поменялось. В будущем доработать
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(DatabaseInfo.SQL_DELETE_ENTRIES);
+        db.execSQL(DatabaseInfo.SQL_DELETE_JOURNAL);
+        db.execSQL(DatabaseInfo.SQL_DELETE_USER);
         onCreate(db);
     }
 
@@ -42,7 +45,7 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         // Получаем бд для записи данных
         SQLiteDatabase db = this.getWritableDatabase();
 
-        AddDish adder = new AddDish(values, db, table);
+        AddData adder = new AddData(values, db, table);
         adder.start();
     }
 
@@ -52,15 +55,39 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         GetDish getDish = new GetDish(date, db, controller);
         getDish.start();
     }
+
+    public void getUser(String login, String password, LoginFragment fragment){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        try {
+            password = getSSH512(password);
+            GetUser getUser = new GetUser(db, login, password, fragment);
+            getUser.start();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            Toast.makeText(MainActivity.getContext(), "Can't use db", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static String getSSH512(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        byte[] digest = md.digest(password.getBytes());
+        StringBuilder sb = new StringBuilder();
+        for (byte b : digest) {
+            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
+    }
 }
 
 
-class AddDish extends Thread{
+class AddData extends Thread{
     private ContentValues values;
     SQLiteDatabase db;
     String table;
 
-    public AddDish(ContentValues values, SQLiteDatabase db, String table){
+    public AddData(ContentValues values, SQLiteDatabase db, String table){
         this.values = values;
         this.db = db;
         this.table = table;
@@ -79,6 +106,72 @@ class AddDish extends Thread{
                     "Не удалось добавить данные", Toast.LENGTH_SHORT);
 
             toast.show();
+        }
+    }
+}
+
+
+class GetUser extends Thread {
+    SQLiteDatabase db;
+    String login;
+    String password;
+    LoginFragment loginFragment;
+
+    public GetUser(SQLiteDatabase db, String login, String password, LoginFragment loginFragment){
+        this.db = db;
+        this.login = login;
+        this.password = password;
+        this.loginFragment = loginFragment;
+    }
+
+    @Override
+    public void run() {
+        // Зададим условие для выборки - список столбцов
+        String[] projection = {
+                DatabaseInfo.COLUMN_PASSWORD
+        };
+
+        // Формируем строку-выборку
+        String selection = DatabaseInfo.COLUMN_LOGIN + " = '" + login + "'";
+
+
+        Cursor cursor;
+        try {
+            // Делаем запрос
+            cursor = db.query(
+                    DatabaseInfo.USER_TABLE,
+                    projection,
+                    selection,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+        }
+        catch (Exception e){
+            // Если что-то пошло не так
+            Log.d("TEST", e.toString());
+
+            Toast toast = Toast.makeText(MainActivity.getContext(),
+                    "Не удалось получить данные", Toast.LENGTH_SHORT);
+
+            toast.show();
+            return;
+        }
+
+        // Узнаем индекс каждого столбца
+        int passwordColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_PASSWORD);
+        cursor.moveToNext();
+        String new_password = "";
+        if (cursor.getCount() != 0){
+            new_password = cursor.getString(passwordColumnIndex);
+        }
+
+        try {
+            loginFragment.onUserFound(DatabaseInterface.getSSH512(new_password).equals(password));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            loginFragment.onUserFound(false);
         }
     }
 }

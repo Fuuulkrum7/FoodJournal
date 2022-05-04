@@ -30,9 +30,12 @@ public class SettingsFragment extends Fragment {
     public static final String APP_PREFERENCES = "journal";
     public static final String APP_PREFERENCES_REMINDER = "Reminder";
     public static final String[] APP_PREFERENCES_TIMES = new String[]{"breakfast_", "lunch_", "dinner_"};
+    public static final String APP_PREFERENCES_SYNCHRONIZATION = "sync";
 
     // Надо ли включать напоминалку
     SwitchMaterial need_to_remind;
+    // И надо ли синхронизировать данные
+    SwitchMaterial synchronization;
     // Получаем доступ к сохраненным данным в настройках
     SharedPreferences settings;
     FoodTimer[] times = new FoodTimer[3];
@@ -46,6 +49,17 @@ public class SettingsFragment extends Fragment {
 
         // Получаем переключатель
         need_to_remind = (SwitchMaterial) view.findViewById(R.id.Reminder);
+        synchronization = (SwitchMaterial) view.findViewById(R.id.Synchronization);
+
+        synchronization.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    
+                }
+            }
+        });
+
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
 
         for (int i = 0; i < APP_PREFERENCES_TIMES.length; i++){
@@ -91,6 +105,8 @@ public class SettingsFragment extends Fragment {
         SharedPreferences.Editor editor = settings.edit();
         boolean notify = need_to_remind.isChecked();
         editor.putBoolean(APP_PREFERENCES_REMINDER, notify);
+        editor.putBoolean(APP_PREFERENCES_SYNCHRONIZATION, synchronization.isChecked());
+
         editor.apply();
 
         if (notify)
@@ -122,6 +138,5 @@ public class SettingsFragment extends Fragment {
 
         getActivity().stopService(new Intent(getActivity(), JournalNotificationService.class));
         getActivity().startService(serviceIntent);
-
     }
 }

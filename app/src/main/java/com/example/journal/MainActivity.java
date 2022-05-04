@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.journal.ui.friends.FriendsFragment;
@@ -23,6 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.journeyapps.barcodescanner.ScanIntentResult;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements ActivityResultCallback<ScanIntentResult> {
     // Некоторые статические перемнные, в частности контекст и разное время птитания
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
     private void loadFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.nav_host_fragment, fragment);
+        ft.addToBackStack("Main");
         ft.commit();
     }
 
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
         loadFragment(new HomeFragment());
 
         SharedPreferences settings = getSharedPreferences(SettingsFragment.APP_PREFERENCES, Context.MODE_PRIVATE);
+
+
 
         if (settings.getBoolean(SettingsFragment.APP_PREFERENCES_REMINDER, false)){
             Log.d(TAG, "running service...");
@@ -105,5 +110,35 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
     // Метод для получения контекста
     public static Context getContext() {
         return MainActivity.context;
+    }
+
+    public void showUpButton() {
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+    }
+
+    public void hideUpButton() {
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack("Main", 0);
+            fragmentManager.beginTransaction().commit();
+
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return true;
     }
 }

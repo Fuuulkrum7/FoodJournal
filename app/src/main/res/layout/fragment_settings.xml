@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:text="Основные настройки"
         android:textColor="@color/secondary_text"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 
     <View
         android:id="@+id/view"
@@ -42,6 +42,17 @@
         android:visibility="gone">
 
     </LinearLayout>
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/Synchronization"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="Синхронизация"
+        android:textColor="@color/secondary_text"
+        android:textSize="20sp"
+        android:thumb="@drawable/standart_switch"
+        app:track="@drawable/standart_switch_track" />
 
     <View
         android:id="@+id/view1"

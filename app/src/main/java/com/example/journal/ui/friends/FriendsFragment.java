@@ -1,6 +1,5 @@
 package com.example.journal.ui.friends;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,8 +15,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.journal.QRReader;
 import com.example.journal.R;
 import com.example.journal.databinding.FragmentFriendsBinding;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 public class FriendsFragment extends Fragment {
     private FragmentFriendsBinding binding;
@@ -50,6 +46,7 @@ public class FriendsFragment extends Fragment {
                 QRReader fragment = QRReader.newInstance();
                 FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                 ft.add(R.id.Constraint, fragment);
+                ft.addToBackStack(null);
                 ft.commit();
         }
         return true;

@@ -1,5 +1,6 @@
 package com.example.journal;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,7 @@ public class EatingFragmentsController implements View.OnClickListener {
         this.activity = activity;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         // Добавляем контейнер под блюдо

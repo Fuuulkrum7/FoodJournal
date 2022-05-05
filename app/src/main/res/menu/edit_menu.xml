@@ -5,8 +5,7 @@
     <item
         android:id="@+id/show_dustbin"
         android:icon="@drawable/dustbin"
-        android:title="Удалить"
-        app:showAsAction="always" />
+        android:title="Удалить"/>
 
     <item
         android:id="@+id/show_pencil"

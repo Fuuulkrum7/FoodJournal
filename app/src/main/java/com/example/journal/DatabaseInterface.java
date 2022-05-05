@@ -5,17 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class DatabaseInterface extends SQLiteOpenHelper {
     // Данные по бд
@@ -80,6 +74,18 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         }
     }
 
+    public void deleteData(int id, String table, String key) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        DeleteData deleteData = new DeleteData(id, table, key, db);
+        deleteData.start();
+    }
+
+    public void updateData(int id, ContentValues values){
+        SQLiteDatabase db = this.getReadableDatabase();
+        UpdateDish updateDish = new UpdateDish(id, db, values);
+        updateDish.start();
+    }
+
     public static String getSSH512(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         byte[] digest = md.digest(password.getBytes());
@@ -128,254 +134,3 @@ public class DatabaseInterface extends SQLiteOpenHelper {
 }
 
 
-class AddUser extends Thread{
-    protected ContentValues values;
-    SQLiteDatabase db;
-    String table;
-
-    public AddUser(ContentValues values, SQLiteDatabase db){
-        this.values = values;
-        this.db = db;
-        this.table = DatabaseInfo.USER_TABLE;
-    }
-
-    @Override
-    public void run(){
-        Cursor cursor = DatabaseInterface.find_user(values.getAsString("login"), db);
-
-        Context context = MainActivity.getContext();
-        if (context == null) {
-            context = LoginFragment.getContext();
-        }
-        if (cursor == null)
-            return;
-
-        else if (cursor.getCount() != 0){
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    Context context = MainActivity.getContext();
-                    if (context == null) {
-                        context = LoginFragment.getContext();
-                    }
-
-                    Toast.makeText(context, "Пользователь уже есть", Toast.LENGTH_SHORT).show();
-                }
-            });
-            return;
-        }
-
-        values.put("password", values.getAsString("password"));
-
-        // Добавляем в бд
-        try {
-            db.insert(table, null, values);
-        }
-        // Если что-то пошло не так, то вот
-        catch (Exception e){
-            Log.d("TEST", e.toString());
-            Toast toast = Toast.makeText(context,
-                    "Не удалось добавить данные", Toast.LENGTH_SHORT);
-
-            toast.show();
-        }
-    }
-}
-
-
-class AddData extends Thread{
-    protected ContentValues values;
-    SQLiteDatabase db;
-    String table;
-
-    public AddData(ContentValues values, SQLiteDatabase db, String table){
-        this.values = values;
-        this.db = db;
-        this.table = table;
-    }
-
-    @Override
-    public void run(){
-        // Добавляем в бд
-        try {
-            db.insert(table, null, values);
-        }
-        // Если что-то пошло не так, то вот
-        catch (Exception e){
-            Log.d("TEST", e.toString());
-            Toast toast = Toast.makeText(MainActivity.getContext(),
-                    "Не удалось добавить данные", Toast.LENGTH_SHORT);
-
-            toast.show();
-        }
-    }
-}
-
-
-class CheckUser extends Thread {
-    SQLiteDatabase db;
-    String login;
-    String password;
-    LoginFragment loginFragment;
-
-    public CheckUser(SQLiteDatabase db, String login, String password, LoginFragment loginFragment){
-        this.db = db;
-        this.login = login;
-        this.password = password;
-        this.loginFragment = loginFragment;
-    }
-
-    @Override
-    public void run() {
-        Cursor cursor = DatabaseInterface.find_user(login, db);
-        if (cursor == null){
-            return;
-        }
-
-        // Узнаем индекс каждого столбца
-        int passwordColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_PASSWORD);
-        cursor.moveToNext();
-        String new_password = "";
-        if (cursor.getCount() != 0){
-            new_password = cursor.getString(passwordColumnIndex);
-        }
-
-        try {
-            loginFragment.onUserFound(DatabaseInterface.getSSH512(new_password).equals(password));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            loginFragment.onUserFound(false);
-        }
-    }
-}
-
-
-class GetDish extends Thread{
-    String date;
-    SQLiteDatabase db;
-    EatingFragmentsController controller;
-
-    public GetDish(String date, SQLiteDatabase db, EatingFragmentsController controller){
-        this.date = date;
-        this.db = db;
-        this.controller = controller;
-    }
-    @Override
-    public void run(){
-
-        // Зададим условие для выборки - список столбцов
-        String[] projection = {
-                DatabaseInfo.COLUMN_DISH,
-                DatabaseInfo.COLUMN_MASS,
-                DatabaseInfo.COLUMN_CALORIES,
-                DatabaseInfo.COLUMN_EATING,
-                DatabaseInfo.COLUMN_TIME,
-                DatabaseInfo.COLUMN_ID
-        };
-
-
-
-        // Формируем строку-выборку
-        String selection = DatabaseInfo.COLUMN_DATE + " = '" + date + "'";
-
-        // Порядок сортировки. Сгачала сортируем по дате, а потом уже по еде
-        String sortOrder =
-                DatabaseInfo.COLUMN_DATE + ", " + DatabaseInfo.COLUMN_EATING + " ASC";
-
-        Cursor cursor;
-        try {
-            // Делаем запрос
-            cursor = db.query(
-                    DatabaseInfo.JOURNAL_TABLE,
-                    projection,
-                    selection,
-                    null,
-                    null,
-                    null,
-                    sortOrder
-            );
-        }
-        catch (Exception e){
-            // Если что-то пошло не так
-            Log.d("TEST", e.toString());
-
-            Toast toast = Toast.makeText(MainActivity.getContext(),
-                    "Не удалось получить данные", Toast.LENGTH_SHORT);
-
-            toast.show();
-
-            return;
-        }
-
-        // Узнаем индекс каждого столбца
-        int dishColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_DISH);
-        int massColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_MASS);
-        int caloriesColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_CALORIES);
-        int eatingColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_EATING);
-        int timeColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_TIME);
-        int idColumnIndex = cursor.getColumnIndex(DatabaseInfo.COLUMN_ID);
-
-        // Словарь, оно же хеш-таблица для наших данных
-        Map<Integer, List<Map<String, String>>> result = new HashMap<Integer, List<Map<String, String>>>();
-
-        int _eating = 0;
-        List<Map<String, String>> dishResult = new ArrayList<Map<String, String>>();
-
-        // Пока в запросе ещё что-то есть
-        while(cursor.moveToNext()) {
-            // Получаем данные из запроса
-            String currentDish = cursor.getString(dishColumnIndex);
-            String currentMass = Integer.toString(cursor.getInt(massColumnIndex));
-            String calories = Integer.toString(cursor.getInt(caloriesColumnIndex));
-            int currentEating = cursor.getInt(eatingColumnIndex);
-            String currentTime = cursor.getString(timeColumnIndex);
-            String id = Integer.toString(cursor.getInt(idColumnIndex));
-
-            if (_eating == 0){
-                _eating = currentEating;
-            }
-
-            if (_eating != currentEating){
-                result.put(_eating, dishResult);
-                _eating = currentEating;
-                // Эта зараза при использовании clear чистит все и в словаре
-                dishResult = new ArrayList<Map<String, String>>();
-            }
-            Map<String, String> dishData = new HashMap<String, String>();
-
-            dishData.put("dish", currentDish);
-            dishData.put("mass", currentMass);
-            dishData.put("calories", calories);
-            dishData.put("time", currentTime);
-            dishData.put("id", id);
-
-            dishResult.add(dishData);
-        }
-        result.put(_eating, dishResult);
-        // Закрываем курсор
-        cursor.close();
-
-        controller.SetData(result);
-    }
-}
-
-/*
-    Выглядит так
-
-    {
-    "ТЕКУЩЕЕ ВРЕМЯ ПРИЕМА ЕДЫ": [
-            {
-                "id": "0",
-                "dish": "борщ",
-                "mass": "300",
-                "time": "20:10:23"
-            },
-            {
-                "id": "1",
-                "dish": "Чай",
-                "mass": "350",
-                "time": "01.12.59"
-            }
-        ]
-    }
-*/

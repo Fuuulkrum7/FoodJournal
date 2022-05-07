@@ -24,7 +24,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.journeyapps.barcodescanner.ScanIntentResult;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements ActivityResultCallback<ScanIntentResult> {
     // Некоторые статические перемнные, в частности контекст и разное время птитания
@@ -103,6 +102,16 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
+
+    @Override
     public void onActivityResult(ScanIntentResult result) {
         Toast.makeText(getContext(), result.getContents(), Toast.LENGTH_LONG).show();
     }
@@ -111,15 +120,6 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
     public static Context getContext() {
         return MainActivity.context;
     }
-
-    public void showUpButton() {
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-    }
-
-    public void hideUpButton() {
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
-    }
-
 
     @Override
     public void onBackPressed() {

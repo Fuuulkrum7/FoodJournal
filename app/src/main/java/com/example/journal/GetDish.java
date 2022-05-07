@@ -113,6 +113,7 @@ class GetDish extends Thread {
         result.put(_eating, dishResult);
         // Закрываем курсор
         cursor.close();
+        db.close();
 
         controller.SetData(result);
     }

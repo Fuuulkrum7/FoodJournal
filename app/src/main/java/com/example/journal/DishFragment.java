@@ -40,7 +40,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN && !change) {
                 handler.postDelayed(longPressed, ViewConfiguration.getLongPressTimeout());
                 view = v;
             }
@@ -51,6 +51,18 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         }
     };
 
+    private int getParentId(){
+        switch (eating_index) {
+            case 0:
+                return R.id.breakfastContainer;
+            case 1:
+                return R.id.lunchContainer;
+            case 2:
+                return R.id.dinnerContainer;
+            default:
+                return R.id.otherContainer;
+        }
+    }
 
     final Handler handler = new Handler(Looper.getMainLooper());
     Runnable longPressed = new Runnable() {
@@ -82,11 +94,15 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         }
     };
 
+    protected void setId(int id){
+        this.id = id;
+    }
+
     protected void deleteFood(){
         if (id == -1)
             return;
         database.deleteData(id, DatabaseInfo.JOURNAL_TABLE, DatabaseInfo.COLUMN_ID);
-        // TODO create fragment deleting
+
         this.onDestroy();
     }
 
@@ -217,9 +233,10 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                     values.put(DatabaseInfo.COLUMN_EATING, eating_index);
                     values.put(DatabaseInfo.COLUMN_DATE, date);
 
-                    database.addData(values, DatabaseInfo.JOURNAL_TABLE);
+                    database.addDish(values, this);
                 }
 
+                change = false;
                 disable();
             }
             // Тут, думаю, и так все понятно
@@ -238,7 +255,8 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void disable(){
         enable = !enable;
-        Log.d(MainActivity.TAG, enable + "");
+        Log.d(MainActivity.TAG, enable + " status");
+
         dish.setFocusable(enable);
         mass.setFocusable(enable);
         calories.setFocusable(enable);

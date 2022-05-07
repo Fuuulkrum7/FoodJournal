@@ -10,7 +10,6 @@ import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -32,8 +31,6 @@ public class JournalNotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Log.d(MainActivity.TAG, "onCreate Intent");
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
@@ -54,22 +51,13 @@ public class JournalNotificationService extends Service {
                     AlarmManager alarmManager =  (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
                     Intent intent1 = new Intent(this, AlarmReceiver.class);
-                    @SuppressLint("UnspecifiedImmutableFlag")
-                    PendingIntent pendingIntent = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                        pendingIntent = PendingIntent.getBroadcast(
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
                                 this,
                                 i,
                                 intent1,
-                                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-                    }
-                    else {
-                        pendingIntent = PendingIntent.getBroadcast(
-                                this,
-                                i,
-                                intent1,
-                                PendingIntent.FLAG_UPDATE_CURRENT);
-                    }
+                                PendingIntent.FLAG_CANCEL_CURRENT);
+
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(System.currentTimeMillis());

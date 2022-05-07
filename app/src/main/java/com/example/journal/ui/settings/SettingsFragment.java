@@ -1,5 +1,8 @@
 package com.example.journal.ui.settings;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.journal.AlarmReceiver;
 import com.example.journal.FoodTimer;
 import com.example.journal.JournalNotificationService;
 import com.example.journal.LoginFragment;
@@ -80,13 +84,31 @@ public class SettingsFragment extends Fragment {
                 }
                 else {
                     // Прячем
-                    getActivity().stopService(new Intent(getActivity(), JournalNotificationService.class));
-                    ((LinearLayout) getView().findViewById(R.id.Timers)).removeAllViews();
+                    LinearLayout layout = (LinearLayout) getView().findViewById(R.id.Timers);
+                    removeNotifications(layout.getChildCount());
+                    layout.removeAllViews();
                 }
             }
         });
 
         return view;
+    }
+
+    @SuppressLint("UnspecifiedImmutableFlag")
+    public void removeNotifications(int len){
+        for (int i = 0; i < len; i++){
+            AlarmManager alarmManager =  (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+            Intent intent1 = new Intent(getContext(), AlarmReceiver.class);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    getContext(),
+                    i,
+                    intent1,
+                    PendingIntent.FLAG_CANCEL_CURRENT);
+
+            alarmManager.cancel(pendingIntent);
+        }
     }
 
     @Override

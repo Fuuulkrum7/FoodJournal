@@ -62,21 +62,9 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-
-        for (int i = 0; i < APP_PREFERENCES_TIMES.length; i++){
-            // Создаем напоминалки (визуальные) и добавляем их
-            times[i] = FoodTimer.newInstance(i, this);
-            ft.add(R.id.Timers, times[i]);
-        }
-
-        ft.commit();
-
         // Если в настройках сохранено предыдущая информация по уведомлениям
         if (settings.contains(APP_PREFERENCES_REMINDER)){
             need_to_remind.setChecked(settings.getBoolean(APP_PREFERENCES_REMINDER, true));
-            if (need_to_remind.isChecked())
-                ((LinearLayout) view.findViewById(R.id.Timers)).setVisibility(View.VISIBLE);
         }
 
         // Прослушка на переключатель
@@ -88,17 +76,39 @@ public class SettingsFragment extends Fragment {
                 if (isChecked)  {
                     // Отображаем всю инфу с будильниками недоделанными
                     startNotificationService();
-                    ((LinearLayout) getView().findViewById(R.id.Timers)).setVisibility(View.VISIBLE);
+                    showTimers();
                 }
                 else {
                     // Прячем
                     getActivity().stopService(new Intent(getActivity(), JournalNotificationService.class));
-                    ((LinearLayout) getView().findViewById(R.id.Timers)).setVisibility(View.GONE);
+                    ((LinearLayout) getView().findViewById(R.id.Timers)).removeAllViews();
                 }
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        int a = ((LinearLayout) getView().findViewById(R.id.Timers)).getChildCount();
+
+        if (need_to_remind.isChecked() && a == 0)
+            showTimers();
+    }
+
+    private void showTimers(){
+        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+
+        for (int i = 0; i < APP_PREFERENCES_TIMES.length; i++){
+            // Создаем напоминалки (визуальные) и добавляем их
+            times[i] = FoodTimer.newInstance(i, this);
+            ft.add(R.id.Timers, times[i]);
+        }
+
+        ft.commit();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

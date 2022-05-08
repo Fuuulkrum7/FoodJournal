@@ -12,5 +12,12 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="mainBackground">@color/background</item>
+        <item name="BreakfastView">@color/primaryLightColor</item>
+        <item name="LunchView">@color/primaryLightColor</item>
+        <item name="DinnerView">@color/secondaryLightColor</item>
+        <item name="OtherView">@color/secondaryLightColor</item>
+        <item name="navBackground">@color/primaryLightColor</item>
+        <item name="textColor">@color/secondary_text</item>
     </style>
 </resources>

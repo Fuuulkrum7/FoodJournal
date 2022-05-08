@@ -12,10 +12,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primaryColor">#003233</color>
-    <color name="primaryLightColor">#305c5c</color>
-    <color name="primaryDarkColor">#000c0c</color>
-    <color name="secondaryColor">#00796b</color>
-    <color name="secondaryLightColor">#48a999</color>
-    <color name="secondaryDarkColor">#004c40</color>
+    <color name="primaryColor">#55d0ef</color>
+    <color name="primaryLightColor">#8fffff</color>
+    <color name="primaryDarkColor">#008DA6</color>
+    <color name="secondaryColor">#2cffbb</color>
+    <color name="secondaryLightColor">#78ffee</color>
+    <color name="secondaryDarkColor">#00B19C</color>
 </resources>

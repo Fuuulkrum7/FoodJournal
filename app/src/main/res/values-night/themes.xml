@@ -12,5 +12,13 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="mainBackground">@color/black</item>
+        <item name="backgroundColor">@color/primaryDarkColor</item>
+        <item name="BreakfastView">@color/primaryDarkColor</item>
+        <item name="LunchView">@color/primaryDarkColor</item>
+        <item name="DinnerView">@color/secondaryDarkColor</item>
+        <item name="OtherView">@color/secondaryDarkColor</item>
+        <item name="navBackground">@color/primaryDarkColor</item>
+        <item name="textColor">@color/primary_text</item>
     </style>
 </resources>

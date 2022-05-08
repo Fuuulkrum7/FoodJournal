@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomTextViewStyles">
+        <attr name="BreakfastView" format="color"/>
+        <attr name="LunchView" format="color"/>
+        <attr name="DinnerView" format="color"/>
+        <attr name="OtherView" format="color"/>
+        <attr name="textColor" format="color"/>
+        <attr name="navBackground" format="color"/>
+        <attr name="mainBackground" format="color"/>
+    </declare-styleable>
+</resources>

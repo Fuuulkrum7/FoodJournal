@@ -9,8 +9,8 @@
     <TextView
         android:id="@+id/FriendName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="User"
+        android:layout_height="wrap_content"
+        android:text="Username"
         android:textColor="?textColor"
         android:textSize="24sp"
         android:padding="16dp" />

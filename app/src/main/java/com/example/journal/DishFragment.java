@@ -102,8 +102,8 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         if (id == -1)
             return;
         database.deleteData(id, DatabaseInfo.JOURNAL_TABLE, DatabaseInfo.COLUMN_ID);
-
-        this.onDestroy();
+        // Это должно удалить текущий фрагмент.
+        getParentFragmentManager().beginTransaction().remove(this).commit();
     }
 
     // Индекс выбранного времени пищи (дабы сразу при выборе его сохранять в таком виде)

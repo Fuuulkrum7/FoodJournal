@@ -56,10 +56,10 @@ public class SettingsFragment extends Fragment {
         need_to_remind = (SwitchMaterial) view.findViewById(R.id.Reminder);
         synchronization = (SwitchMaterial) view.findViewById(R.id.Synchronization);
 
-        synchronization.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        synchronization.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+            public void onClick(View v) {
+                if (synchronization.isChecked()){
                     Intent intent = new Intent(getContext(), LoginFragment.class);
                     startActivity(intent);
                 }
@@ -120,8 +120,7 @@ public class SettingsFragment extends Fragment {
         if (need_to_remind.isChecked() && a == 0)
             showTimers();
 
-        Log.d(MainActivity.TAG, settings.getBoolean(APP_PREFERENCES_SYNCHRONIZATION, false) + "");
-
+        synchronization.setChecked(settings.getBoolean(APP_PREFERENCES_SYNCHRONIZATION, false));
     }
 
     private void showTimers(){

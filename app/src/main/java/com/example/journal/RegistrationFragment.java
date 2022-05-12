@@ -2,6 +2,8 @@ package com.example.journal;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,6 +20,11 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     EditText username;
     EditText password;
     EditText login;
+
+    String name;
+    String passwordText;
+    String loginText;
+
     int countL = 0;
     int countP = 0;
     int countU = 0;
@@ -97,9 +104,9 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.registration_reg){
-            String name = username.getText().toString();
-            String passwordText = password.getText().toString();
-            String loginText = login.getText().toString();
+            name = username.getText().toString();
+            passwordText = password.getText().toString();
+            loginText = login.getText().toString();
 
             DatabaseInterface databaseInterface = new DatabaseInterface(getContext());
 
@@ -125,8 +132,17 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         public void run(){
             try {
                 addUser.join();
-                if (addUser.success)
-                    getActivity().onBackPressed();
+                if (addUser.success){
+                    RemoteDatabaseInterface remoteDatabaseInterface = new RemoteDatabaseInterface();
+                    remoteDatabaseInterface.addUser(loginText, passwordText, name);
+
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getActivity().onBackPressed();
+                        }
+                    });
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

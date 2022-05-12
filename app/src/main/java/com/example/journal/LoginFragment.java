@@ -118,8 +118,6 @@ public class LoginFragment extends AppCompatActivity implements View.OnClickList
         );
         editor.apply();
 
-        Log.d(MainActivity.TAG, entered + "");
-
         super.onDestroy();
     }
 

@@ -61,6 +61,10 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         return adder;
     }
 
+    public void setId(int id) {
+
+    }
+
     // Соответсвтвенно, получем блюда
     public void getDishes(String date, EatingFragmentsController controller){
         SQLiteDatabase db = this.getReadableDatabase();

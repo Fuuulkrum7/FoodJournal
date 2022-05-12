@@ -97,7 +97,7 @@ public class SettingsFragment extends Fragment {
     @SuppressLint("UnspecifiedImmutableFlag")
     public void removeNotifications(int len){
         for (int i = 0; i < len; i++){
-            AlarmManager alarmManager =  (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
             Intent intent1 = new Intent(getContext(), AlarmReceiver.class);
 
@@ -119,6 +119,9 @@ public class SettingsFragment extends Fragment {
 
         if (need_to_remind.isChecked() && a == 0)
             showTimers();
+
+        Log.d(MainActivity.TAG, settings.getBoolean(APP_PREFERENCES_SYNCHRONIZATION, false) + "");
+
     }
 
     private void showTimers(){

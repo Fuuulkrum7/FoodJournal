@@ -13,6 +13,7 @@ class AddUser extends Thread {
     protected ContentValues values;
     SQLiteDatabase db;
     String table;
+    boolean success = false;
 
     public AddUser(ContentValues values, SQLiteDatabase db) {
         this.values = values;
@@ -22,7 +23,27 @@ class AddUser extends Thread {
 
     @Override
     public void run() {
-        Cursor cursor = DatabaseInterface.find_user(values.getAsString("login"), db);
+        Cursor cursor;
+        FindUser findUser = new FindUser(values.getAsString("login"), db);
+        findUser.start();
+        try {
+            findUser.join();
+            cursor = findUser.getCursor();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Context context = MainActivity.getContext();
+                    if (context == null) {
+                        context = LoginFragment.getContext();
+                    }
+
+                    Toast.makeText(context, "Не удается получить данные", Toast.LENGTH_SHORT).show();
+                }
+            });
+            return;
+        }
 
         Context context = MainActivity.getContext();
         if (context == null) {
@@ -46,11 +67,12 @@ class AddUser extends Thread {
             return;
         }
 
-        values.put("password", values.getAsString("password"));
+        db.execSQL("delete from " + table);
 
         // Добавляем в бд
         try {
             db.insert(table, null, values);
+            success = true;
         }
         // Если что-то пошло не так, то вот
         catch (Exception e) {

@@ -2,6 +2,7 @@ package com.example.journal;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,11 +16,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.journal.ui.settings.SettingsFragment;
+
 public class LoginFragment extends AppCompatActivity implements View.OnClickListener {
     Button enter;
     Button registration;
     EditText password;
     EditText login;
+    boolean entered = false;
+    String name = SettingsFragment.APP_PREFERENCES;
+    String key = SettingsFragment.APP_PREFERENCES_SYNCHRONIZATION;
 
     @SuppressLint("StaticFieldLeak")
     private static Context context;
@@ -94,8 +100,28 @@ public class LoginFragment extends AppCompatActivity implements View.OnClickList
                 }
             });
         }
+
+        else {
+            entered = true;
+            this.finish();
+        }
     }
 
+    @Override
+    public void onDestroy(){
+        SharedPreferences settings = getSharedPreferences(name, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putBoolean(
+                key,
+                entered
+        );
+        editor.apply();
+
+        Log.d(MainActivity.TAG, entered + "");
+
+        super.onDestroy();
+    }
 
     // Метод для получения контекста
     public static Context getContext() {

@@ -2,10 +2,8 @@ package com.example.journal;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.security.MessageDigest;
@@ -53,12 +51,14 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         adder.start();
     }
 
-    public void addUser(ContentValues values){
+    public AddUser addUser(ContentValues values){
         // Получаем бд для записи данных
         SQLiteDatabase db = this.getWritableDatabase();
 
         AddUser adder = new AddUser(values, db);
         adder.start();
+
+        return adder;
     }
 
     // Соответсвтвенно, получем блюда
@@ -103,86 +103,4 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         }
         return sb.toString();
     }
-
-    protected static Cursor find_user(String login, SQLiteDatabase db) {
-        String[] projection = {
-                DatabaseInfo.COLUMN_PASSWORD
-        };
-
-        // Формируем строку-выборку
-        String selection = DatabaseInfo.COLUMN_LOGIN + " = '" + login + "'";
-
-
-        Cursor cursor;
-        try {
-            // Делаем запрос
-            cursor = db.query(
-                    DatabaseInfo.USER_TABLE,
-                    projection,
-                    selection,
-                    null,
-                    null,
-                    null,
-                    null
-            );
-        }
-        catch (Exception e){
-            // Если что-то пошло не так
-            Log.d("TEST", e.toString());
-
-            Toast toast = Toast.makeText(MainActivity.getContext(),
-                    "Не удалось получить данные", Toast.LENGTH_SHORT);
-
-            toast.show();
-            return null;
-        }
-
-        return cursor;
-    }
 }
-
-
-class AddDish extends Thread {
-    protected ContentValues values;
-    SQLiteDatabase db;
-    DishFragment dishFragment;
-
-    public AddDish(ContentValues values, SQLiteDatabase db, DishFragment dishFragment) {
-        this.db = db;
-        this.dishFragment = dishFragment;
-        this.values = values;
-    }
-
-    @Override
-    public void run(){
-        AddData a = new AddData(values, db, DatabaseInfo.JOURNAL_TABLE);
-        a.start();
-        try {
-            a.join();
-            Cursor cursor = db.query(
-                    DatabaseInfo.JOURNAL_TABLE,
-                    new String [] {DatabaseInfo.COLUMN_ID},
-                    DatabaseInfo.COLUMN_ID +
-                            "= (SELECT MAX(" + DatabaseInfo.COLUMN_ID + ") FROM " +
-                            DatabaseInfo.JOURNAL_TABLE + ")",
-                    null,
-                    null,
-                    null,
-                    DatabaseInfo.COLUMN_ID + " DESC",
-                    "1"
-            );
-
-            int index = cursor.getColumnIndex(DatabaseInfo.COLUMN_ID);
-            int id = -1;
-            while (cursor.moveToNext()) {
-                id = cursor.getInt(index);
-            }
-
-            if (dishFragment.id == -1)
-                dishFragment.setId(id);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
-

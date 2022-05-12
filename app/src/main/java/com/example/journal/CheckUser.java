@@ -2,6 +2,7 @@ package com.example.journal;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -20,7 +21,18 @@ class CheckUser extends Thread {
 
     @Override
     public void run() {
-        Cursor cursor = DatabaseInterface.find_user(login, db);
+        FindUser findUser = new FindUser(login, db);
+        findUser.start();
+        Cursor cursor;
+
+        try {
+            findUser.join();
+            cursor = findUser.getCursor();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
+        }
+
         if (cursor == null) {
             return;
         }
@@ -34,7 +46,10 @@ class CheckUser extends Thread {
         }
 
         try {
-            loginFragment.onUserFound(DatabaseInterface.getSSH512(new_password).equals(password));
+            Log.d(MainActivity.TAG, password + " " + new_password);
+            new_password = DatabaseInterface.getSSH512(new_password);
+
+            loginFragment.onUserFound(new_password.equals(password));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             loginFragment.onUserFound(false);

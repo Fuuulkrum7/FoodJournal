@@ -40,7 +40,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN && !change) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN && !change && !enable) {
                 handler.postDelayed(longPressed, ViewConfiguration.getLongPressTimeout());
                 view = v;
             }
@@ -120,8 +120,6 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.dish_fragment,
                 container, false);
 
-        setHasOptionsMenu(true);
-
         view.setOnTouchListener(listener);
 
         database = new DatabaseInterface(MainActivity.getContext());
@@ -138,6 +136,10 @@ public class DishFragment extends Fragment implements View.OnClickListener {
 
         addDish = (Button) view.findViewById(R.id.addDish);
         addDish.setOnClickListener(this);
+
+        dish.setClickable(true);
+        mass.setClickable(true);
+        calories.setClickable(true);
 
         if (getArguments().containsKey("dish")){
             setNewData(
@@ -257,9 +259,6 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         enable = !enable;
         Log.d(MainActivity.TAG, enable + " status");
 
-        dish.setFocusable(enable);
-        mass.setFocusable(enable);
-        calories.setFocusable(enable);
         if (!enable){
             addDish.setVisibility(View.GONE);
             calories.setInputType(InputType.TYPE_NULL);

@@ -108,8 +108,28 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             values.put(DatabaseInfo.COLUMN_PASSWORD, passwordText);
             values.put(DatabaseInfo.COLUMN_LOGIN, loginText);
 
-            databaseInterface.addUser(values);
-            getActivity().onBackPressed();
+            AddUser addUser = databaseInterface.addUser(values);
+            Sync sync = new Sync(addUser);
+            sync.start();
+        }
+    }
+
+    class Sync extends Thread {
+        AddUser addUser;
+
+        public Sync(AddUser addUser){
+            this.addUser = addUser;
+        }
+
+        @Override
+        public void run(){
+            try {
+                addUser.join();
+                if (addUser.success)
+                    getActivity().onBackPressed();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

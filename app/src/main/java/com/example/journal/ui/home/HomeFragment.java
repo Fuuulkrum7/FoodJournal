@@ -60,6 +60,7 @@ public class HomeFragment extends Fragment {
             else
                 controller.showButtons();
 
+            @SuppressLint("DefaultLocale")
             String current_date = String.format("%d%d.%d%d.%d",
                     day / 10, day % 10,
                     (month + 1) / 10,(month + 1) % 10,
@@ -103,8 +104,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.home_page_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

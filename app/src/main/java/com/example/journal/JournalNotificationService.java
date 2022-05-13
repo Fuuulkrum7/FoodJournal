@@ -56,11 +56,10 @@ public class JournalNotificationService extends Service {
                                 this,
                                 i,
                                 intent1,
-                                PendingIntent.FLAG_CANCEL_CURRENT);
-
+                                PendingIntent.FLAG_CANCEL_CURRENT
+                    );
 
                     Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(System.currentTimeMillis());
                     calendar.set(Calendar.HOUR_OF_DAY, time / 60);
                     calendar.set(Calendar.MINUTE, time % 60);
                     calendar.set(Calendar.SECOND, 0);

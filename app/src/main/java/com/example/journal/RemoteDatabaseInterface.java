@@ -26,6 +26,11 @@ public class RemoteDatabaseInterface {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful()){
+                    Log.d(MainActivity.TAG, "Server error: " + response.code() + "\n" + response.toString());
+                    return;
+                }
+
                 User responseAPI = response.body();
 
                 Context context = MainActivity.getContext();
@@ -39,7 +44,8 @@ public class RemoteDatabaseInterface {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-
+                Log.d(MainActivity.TAG, "error");
+                t.printStackTrace();
             }
         });
     }

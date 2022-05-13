@@ -74,7 +74,9 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
         SharedPreferences settings = getSharedPreferences(SettingsFragment.APP_PREFERENCES, Context.MODE_PRIVATE);
 
-
+        // DELETE
+        RemoteDatabaseInterface remoteDatabaseInterface = new RemoteDatabaseInterface();
+        remoteDatabaseInterface.addUser("123", "123", "1223");
 
         if (settings.getBoolean(SettingsFragment.APP_PREFERENCES_REMINDER, false)){
             Log.d(TAG, "running service...");

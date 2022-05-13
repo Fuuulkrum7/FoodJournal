@@ -1,9 +1,18 @@
 package com.example.journal;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
+    @SerializedName("login")
     private String login;
+
+    @SerializedName("password")
     private String password;
+
+    @SerializedName("username")
     private String username;
+
+    @SerializedName("id")
     private String id;
 
     public User(String login, String password, String username, String id) {

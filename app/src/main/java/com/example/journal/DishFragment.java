@@ -4,16 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,50 +30,26 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     boolean change = false;
     int id = -1;
     boolean enable = true;
-    View view;
 
-    View.OnTouchListener listener = new View.OnTouchListener() {
-        @SuppressLint("ClickableViewAccessibility")
+    // прослушка на долгое нажатия для создания всплывающего меню
+    View.OnLongClickListener listener = new View.OnLongClickListener() {
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN && !change && !enable) {
-                handler.postDelayed(longPressed, ViewConfiguration.getLongPressTimeout());
-                view = v;
-            }
-            if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP){
-                handler.removeCallbacks(longPressed);
-            }
+        public boolean onLongClick(View v) {
+            // Отображаем менюшку, если мы не редактируем данные о блюде прямо сейчас
+            if (!change && !enable)
+                showPopup(v);
             return false;
         }
     };
 
-    private int getParentId(){
-        switch (eating_index) {
-            case 0:
-                return R.id.breakfastContainer;
-            case 1:
-                return R.id.lunchContainer;
-            case 2:
-                return R.id.dinnerContainer;
-            default:
-                return R.id.otherContainer;
-        }
-    }
-
-    final Handler handler = new Handler(Looper.getMainLooper());
-    Runnable longPressed = new Runnable() {
-        @Override
-        public void run() {
-            showPopup();
-        }
-    };
-
+    // Обработка на выбор элемента из меню
     PopupMenu.OnMenuItemClickListener onMenuItemClickListener = new PopupMenu.OnMenuItemClickListener() {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @SuppressLint("NonConstantResourceId")
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
+                // Если нажали на кнопку удалить
                 case R.id.show_dustbin:
                     deleteFood();
                     return true;
@@ -120,7 +92,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.dish_fragment,
                 container, false);
 
-        view.setOnTouchListener(listener);
+        view.setOnLongClickListener(listener);
 
         database = new DatabaseInterface(MainActivity.getContext());
         eating_index = getArguments().getInt("eating");
@@ -130,9 +102,9 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         dish = (EditText) view.findViewById(R.id.dishName);
         calories = (EditText) view.findViewById(R.id.calories);
 
-        dish.setOnTouchListener(listener);
-        mass.setOnTouchListener(listener);
-        calories.setOnTouchListener(listener);
+        dish.setOnLongClickListener(listener);
+        mass.setOnLongClickListener(listener);
+        calories.setOnLongClickListener(listener);
 
         addDish = (Button) view.findViewById(R.id.addDish);
         addDish.setOnClickListener(this);
@@ -169,8 +141,8 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public void showPopup() {
-        PopupMenu popup = new PopupMenu(getContext(), view);
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(getContext(), v);
         popup.setOnMenuItemClickListener(onMenuItemClickListener);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.edit_menu, popup.getMenu());
@@ -257,7 +229,6 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void disable(){
         enable = !enable;
-        Log.d(MainActivity.TAG, enable + " status");
 
         if (!enable){
             addDish.setVisibility(View.GONE);

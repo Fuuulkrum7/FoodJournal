@@ -103,7 +103,7 @@ public class SettingsFragment extends Fragment {
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(
                     getContext(),
-                    i,
+                    0,
                     intent1,
                     PendingIntent.FLAG_CANCEL_CURRENT);
 

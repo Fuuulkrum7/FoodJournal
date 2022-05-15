@@ -77,7 +77,7 @@ class GetDish extends Thread {
         // Словарь, оно же хеш-таблица для наших данных
         Map<Integer, List<Map<String, String>>> result = new HashMap<Integer, List<Map<String, String>>>();
 
-        int _eating = 0;
+        int _eating = -1;
         List<Map<String, String>> dishResult = new ArrayList<Map<String, String>>();
 
         // Пока в запросе ещё что-то есть
@@ -90,7 +90,7 @@ class GetDish extends Thread {
             String currentTime = cursor.getString(timeColumnIndex);
             String id = Integer.toString(cursor.getInt(idColumnIndex));
 
-            if (_eating == 0) {
+            if (_eating == -1) {
                 _eating = currentEating;
             }
 

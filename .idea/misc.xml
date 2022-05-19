@@ -24,6 +24,8 @@
         <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/menu/bottom_nav_menu.xml" value="0.22" />
         <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/menu/edit_menu.xml" value="0.3302083333333333" />
         <entry key="..\:/My projects/Java Samsung project/FoodJournal/app/src/main/res/menu/home_page_menu.xml" value="0.25" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.326" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.326" />
         <entry key="app/src/main/res/drawable/small_switch.xml" value="0.326" />
         <entry key="app/src/main/res/drawable/standart_switch.xml" value="0.326" />
         <entry key="app/src/main/res/drawable/standart_switch_track.xml" value="0.33" />
@@ -46,6 +48,8 @@
         <entry key="app/src/main/res/menu/friends_page_menu.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/menu/home_page_menu.xml" value="0.35260416666666666" />
         <entry key="app/src/main/res/menu/login_menu.xml" value="0.35260416666666666" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.326" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.326" />
         <entry key="app/src/main/res/xml/settings.xml" value="0.35260416666666666" />
       </map>
     </option>

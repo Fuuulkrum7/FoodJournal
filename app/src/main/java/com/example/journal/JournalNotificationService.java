@@ -54,7 +54,7 @@ public class JournalNotificationService extends Service {
 
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(
                                 this,
-                                0,
+                                i,
                                 intent1,
                                 PendingIntent.FLAG_CANCEL_CURRENT
                     );

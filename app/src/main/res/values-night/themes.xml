@@ -16,7 +16,7 @@
         <item name="backgroundColor">@color/primaryDarkColor</item>
         <item name="BreakfastView">@color/primaryDarkColor</item>
         <item name="LunchView">@color/primaryDarkColor</item>
-        <item name="DinnerView">@color/secondaryDarkColor</item>
+        <item name="DinnerView">@color/primaryDarkColor</item>
         <item name="OtherView">@color/secondaryDarkColor</item>
         <item name="navBackground">@color/primaryDarkColor</item>
         <item name="textColor">@color/primary_text</item>

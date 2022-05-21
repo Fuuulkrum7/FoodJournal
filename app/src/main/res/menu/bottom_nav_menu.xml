@@ -8,12 +8,6 @@
         android:actionLayout="@layout/fragment_home"/>
 
     <item
-        android:id="@+id/navigation_search"
-        android:icon="@drawable/search_icon"
-        android:title="@string/title_search"
-        android:actionLayout="@layout/fragment_search"/>
-
-    <item
         android:id="@+id/navigation_friends"
         android:icon="@drawable/friends_icon"
         android:title="@string/title_friends"/>

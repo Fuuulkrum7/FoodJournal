@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background">#E0F7FA</color>
-    <color name="primary_main">#00838f</color>
-    <color name="primary_light">#4fb3bf</color>
-    <color name="primary_dark">#005662</color>
-    <color name="secondary_main">#00bcd4</color>
-    <color name="secondary_light">#62efff</color>
-    <color name="secondary_dark">#008ba3</color>
+    <color name="primary_main">#f9932c</color>
+    <color name="primary_light">#f9e521</color>
+    <color name="primary_dark">#ffb700</color>
+    <color name="secondary_main">#ffd100</color>
+    <color name="secondary_light">#ffff00</color>
+    <color name="secondary_dark">#ffb700</color>
     <color name="primary_text">#e0f7fa</color>
-    <color name="secondary_text">#003027</color>
-    <color name="black">#FF000000</color>
+    <color name="secondary_text">#e05e23</color>
+    <color name="black">#FF444444</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primaryColor">#55d0ef</color>
-    <color name="primaryLightColor">#8fffff</color>
-    <color name="primaryDarkColor">#008DA6</color>
-    <color name="secondaryColor">#2cffbb</color>
-    <color name="secondaryLightColor">#78ffee</color>
-    <color name="secondaryDarkColor">#00B19C</color>
+    <color name="primaryColor">#ffeb00</color>
+    <color name="primaryLightColor">#f9e521</color>
+    <color name="primaryDarkColor">#facc0d</color>
+    <color name="secondaryColor">#ffdc26</color>
+    <color name="secondaryLightColor">#f4f56d</color>
+    <color name="secondaryDarkColor">#c9a501</color>
 </resources>

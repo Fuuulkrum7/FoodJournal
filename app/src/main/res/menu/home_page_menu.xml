@@ -6,5 +6,6 @@
         android:id="@+id/show_calendar"
         android:icon="@drawable/calendar_icon"
         android:title="Календарь"
+        android:iconTint="?textColor"
         app:showAsAction="ifRoom" />
 </menu>

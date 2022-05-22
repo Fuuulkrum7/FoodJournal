@@ -12,12 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_search"
-        android:name="com.example.journal.ui.settings.SettingsFragment"
-        android:label="@string/title_search"
-        tools:layout="@layout/fragment_search" />
-
-    <fragment
         android:id="@+id/navigation_friends"
         android:name="com.example.journal.ui.friends.FriendsFragment"
         android:label="@string/title_friends"
@@ -28,4 +22,9 @@
         android:name="com.example.journal.ui.friends.FriendsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.example.journal.ui.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
 </navigation>

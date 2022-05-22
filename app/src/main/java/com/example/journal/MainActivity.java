@@ -42,9 +42,11 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
                 case R.id.navigation_home:
                     loadFragment(new HomeFragment());
                     return true;
+                /*
                 case R.id.navigation_search:
                     loadFragment(new SearchFragment());
                     return true;
+                 */
                 case R.id.navigation_friends:
                     loadFragment(new FriendsFragment());
                     return true;

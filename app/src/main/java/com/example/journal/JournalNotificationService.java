@@ -59,26 +59,17 @@ public class JournalNotificationService extends Service {
                                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE
                     );
 
-                    boolean exists =  (PendingIntent.getBroadcast(
-                            this,
-                            i,
-                            intent1,
-                            PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE
-                    )) != null;
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.HOUR_OF_DAY, time / 60);
+                    calendar.set(Calendar.MINUTE, time % 60);
+                    calendar.set(Calendar.SECOND, 0);
 
-                    if (!exists){
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(Calendar.HOUR_OF_DAY, time / 60);
-                        calendar.set(Calendar.MINUTE, time % 60);
-                        calendar.set(Calendar.SECOND, 0);
-                        
-                        alarmManager.setWindow(
-                                AlarmManager.RTC_WAKEUP,
-                                calendar.getTimeInMillis(),
-                                AlarmManager.INTERVAL_DAY,
-                                pendingIntent
-                        );
-                    }
+                    alarmManager.setWindow(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            AlarmManager.INTERVAL_DAY,
+                            pendingIntent
+                    );
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.example.journal;
 
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +18,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.journal.ui.friends.FriendsFragment;
 import com.example.journal.ui.home.HomeFragment;
-import com.example.journal.ui.search.SearchFragment;
 import com.example.journal.ui.settings.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.journeyapps.barcodescanner.ScanIntentResult;
@@ -77,10 +75,6 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
 
         SharedPreferences settings = getSharedPreferences(SettingsFragment.APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        // DELETE
-        RemoteDatabaseInterface remoteDatabaseInterface = new RemoteDatabaseInterface();
-        remoteDatabaseInterface.addUser("123", "123", "1223");
-
         if (settings.getBoolean(SettingsFragment.APP_PREFERENCES_REMINDER, false)){
             Log.d(TAG, "running service...");
             ArrayList<Integer> times = new ArrayList<>();
@@ -107,8 +101,11 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
     }
 
     @Override
-    public void onStart(){
-        super.onStart();
+    public void onResume(){
+        super.onResume();
+        // DELETE
+        RemoteDatabaseInterface remoteDatabaseInterface = new RemoteDatabaseInterface();
+        remoteDatabaseInterface.addUser("123", "123", "1223");
     }
 
     @Override

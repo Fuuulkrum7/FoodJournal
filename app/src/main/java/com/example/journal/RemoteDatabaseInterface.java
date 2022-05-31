@@ -10,12 +10,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RemoteDatabaseInterface {
-    public static final String URL = "http://f0653156.xsph.ru";
+    public static final String LINK = "http://f0653156.xsph.ru";
+    public static final String USERNAME_FIELD = "username";
+    public static final String LOGIN_FIELD = "login";
+    public static final String PASSWORD_FIELD = "password";
 
     public void addUser(String login, String password, String name) {
         Log.d(MainActivity.TAG, "0");
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(LINK)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JournalAPI journalAPI = retrofit.create(JournalAPI.class);
@@ -39,7 +43,7 @@ public class RemoteDatabaseInterface {
                 }
 
                 DatabaseInterface databaseInterface = new DatabaseInterface(context);
-                Log.d(MainActivity.TAG, responseAPI.getId());
+                //Log.d(MainActivity.TAG, responseAPI.getId());
             }
 
             @Override

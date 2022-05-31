@@ -1,5 +1,5 @@
 <?php
-    require_once("check_user.php");
+    require_once("check.php");
 
     if (isset($_POST["login"]) && isset($_POST["password"]) && isset($_POST["username"])){
         $login = $_POST["login"];
@@ -28,10 +28,10 @@
             echo $row["user_id"];
         }
         else {
-            echo "User exists";
+            echo "-2";
         }
     }
     else {
-        echo "No data";
+        echo "-1";
     }
 ?>

@@ -6,7 +6,8 @@
             die("Connection failed: " . $mysqli->connect_error);
         }
 
-        $stmt = $mysqli->prepare("SELECT login, password FROM users WHERE login = $login");
+        $stmt = $mysqli->prepare("SELECT login, password FROM users WHERE login = (?)");
+        $stmt->bind_param("s", $login);
         $stmt->execute();
 
         $result = $stmt->get_result();

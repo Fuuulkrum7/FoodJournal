@@ -7,8 +7,9 @@
         $username = $_POST["username"];
 
         $result = checkUser($login, $password);
-
+        
         if ($result == "400"){
+            
             $mysqli = new mysqli("localhost","f0653156_JournalUser","ThisIsJournalDB","f0653156_FoodJournalRemote");
 
             if ($mysqli->connect_error){
@@ -20,10 +21,12 @@
 
             $stmt->execute();
 
-            $query = $mysqli->prepare("SELECT user_id FROM users WHERE login = $login");
+            $query = $mysqli->prepare("SELECT user_id FROM users WHERE login = (?)");
+            $query->bind_param("s", $login);
             $query->execute();
-            $result = $query->get_result();
-            $row = $result->fetch_assoc();
+            
+            $res = $query->get_result();
+            $row = $res->fetch_assoc();
 
             echo $row["user_id"];
         }

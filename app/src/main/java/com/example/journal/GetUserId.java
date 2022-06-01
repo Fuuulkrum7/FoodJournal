@@ -3,6 +3,8 @@ package com.example.journal;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,23 +20,19 @@ class GetUserId extends Thread {
     public void run() {
         Cursor cursor;
         try {
-            cursor = db.query(
-                    DatabaseInfo.USER_TABLE,
-                    new String[]{DatabaseInfo.COLUMN_USER_ID},
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-            );
+            cursor =  db.rawQuery("select * from " + DatabaseInfo.USER_TABLE,null);;
         } catch (Exception e) {
             // Если что-то пошло не так
             Log.d(MainActivity.TAG, e.toString());
 
-            Toast toast = Toast.makeText(MainActivity.getContext(),
-                    "Не удалось отправить данные", Toast.LENGTH_SHORT);
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.getContext(),
+                        "Не удалось отправить данные", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-            toast.show();
 
             return;
         }
@@ -43,6 +41,7 @@ class GetUserId extends Thread {
         cursor.moveToFirst();
 
         id = cursor.getInt(idColumnIndex);
+        Log.d(MainActivity.TAG, id + "");
     }
 
     public int getUId() {

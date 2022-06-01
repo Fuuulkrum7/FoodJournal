@@ -53,6 +53,7 @@ public class RemoteDatabaseInterface {
                     stream.writeBytes(json);
                     stream.flush();
                     stream.close();
+                    Log.d(MainActivity.TAG, connection.getResponseCode() + "");
                     InputStream in = new BufferedInputStream(connection.getInputStream());
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     StringBuilder result = new StringBuilder();

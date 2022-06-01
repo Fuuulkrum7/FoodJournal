@@ -26,12 +26,14 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     String passwordText;
     String loginText;
 
+    boolean done = false;
+
     int countL = 0;
     int countP = 0;
     int countU = 0;
 
     private void updateButton(){
-        registrate.setEnabled(countL >= 4 && countP >= 8 && countU >= 3);
+       done = (countL >= 4 && countP >= 8 && countU >= 3);
     }
 
     @Override
@@ -90,7 +92,6 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
 
         registrate = (Button) view.findViewById(R.id.registration_reg);
         registrate.setOnClickListener(this);
-        registrate.setEnabled(false);
 
         return view;
     }
@@ -105,6 +106,10 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.registration_reg){
+            if (!done){
+                Toast.makeText(getContext(), "Длина логина должна быть больше 4, пароля - 8", Toast.LENGTH_SHORT).show();
+                return;
+            }
             name = username.getText().toString();
             passwordText = password.getText().toString();
             loginText = login.getText().toString();

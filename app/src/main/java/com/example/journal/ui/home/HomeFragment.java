@@ -15,6 +15,7 @@ import android.view.ViewTreeObserver;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -199,7 +200,12 @@ public class HomeFragment extends Fragment {
         }
     }
 
-@Override
+    public void updateCaloriesForToday(){
+        TextView calories = getActivity().findViewById(R.id.totalCaloriesToday);
+
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }

@@ -103,9 +103,6 @@ public class MainActivity extends AppCompatActivity implements ActivityResultCal
     @Override
     public void onResume(){
         super.onResume();
-        // DELETE
-        RemoteDatabaseInterface remoteDatabaseInterface = new RemoteDatabaseInterface();
-        remoteDatabaseInterface.addUser("123", "123", "1223");
     }
 
     @Override

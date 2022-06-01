@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -199,7 +200,6 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                 // Добавляем блюдо в бд
                 // Здесь будут данные для добавления в бд
                 ContentValues values = getValues();
-
                 if (change){
                     database.updateData(id, values);
                 }
@@ -208,6 +208,8 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                     values.put(DatabaseInfo.COLUMN_DATE, date);
 
                     database.addDish(values, this);
+
+
                 }
 
                 change = false;

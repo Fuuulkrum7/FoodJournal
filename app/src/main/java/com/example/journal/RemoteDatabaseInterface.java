@@ -29,7 +29,7 @@ public class RemoteDatabaseInterface {
     public static final String PASSWORD_FIELD = "password";
 
     public void addUser(String login, String password, String name) {
-        Log.d(MainActivity.TAG, "0");
+        Log.d(MainActivity.TAG, "register");
         Thread thread = new Thread(){
             @Override
             public void run() {
@@ -46,7 +46,7 @@ public class RemoteDatabaseInterface {
                         connection.connect();
                         DataOutputStream stream = new DataOutputStream(connection.getOutputStream());
                         String json = String.format(
-                                "{ \"%s\" : \"%s\", \"%s\" : \"%s\", \"%s\" : \"%s\"}",
+                                "%s=%s&%s=%s&%s=%s",
                                 USERNAME_FIELD, name, LOGIN_FIELD, login, PASSWORD_FIELD, password);
                         Log.d(MainActivity.TAG, json);
                         stream.writeBytes(json);
@@ -71,6 +71,46 @@ public class RemoteDatabaseInterface {
                         }
                         //Дальше, я полагаю, надо куда-то этот номер сохранить.
                         Log.d("test", "result from server: " + result.toString());
+                    } finally {
+                        connection.disconnect();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.e(MainActivity.TAG, "Failure while creating a url or working with connection.");
+                }
+            }
+        };
+        thread.start();
+    }
+
+    public void addDish(int id, String name, int mass, int calories, int eatingIndex, String date, String time, int userId)
+    {
+        Log.d(MainActivity.TAG, "add dish");
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    URL requestUrl = new URL(LINK + "/add_dish.php");
+                    HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+                    connection.setDoOutput(true);
+                    connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Accept-Charset", "UTF-8");
+                    connection.setReadTimeout(10000);
+                    connection.setConnectTimeout(15000);
+                    try
+                    {
+                        connection.connect();
+                        DataOutputStream stream = new DataOutputStream(connection.getOutputStream());
+                        String json = String.format(
+                                "%s=%s&%s=%s&%s=%s&%s=%s&%s=%s&%s=%s&%s=%s&%s=%s",
+                                "local_id", id, "dish", name, "mass", mass, "calories", calories,
+                                "eating", eatingIndex, "date", date, "time", time, "user_id", userId);
+                        Log.d(MainActivity.TAG, json);
+                        stream.writeBytes(json);
+                        stream.flush();
+                        stream.close();
+                        if (connection.getResponseCode() == 400) Log.e(MainActivity.TAG, "Problems with connection data.");
+                        else Log.d(MainActivity.TAG, "Dish has been added successfully.");
                     } finally {
                         connection.disconnect();
                     }

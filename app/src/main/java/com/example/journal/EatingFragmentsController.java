@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +18,10 @@ public class EatingFragmentsController implements View.OnClickListener {
     // А здесь лежат нужные нам элементы интерфейса
     public Button addBreakfast, addLunch, addDinner, addOther;
     public LinearLayout breakfastContainer, lunchContainer, dinnerContainer, otherContainer;
+    private TextView totalCalories;
     public String[] eating;
     public String date;
+    int calories;
     Fragment activity;
 
     public EatingFragmentsController(String[] eating, Fragment activity){
@@ -71,6 +75,8 @@ public class EatingFragmentsController implements View.OnClickListener {
         addDinner = (Button) view.findViewById(R.id.addDinner);
         addOther = (Button) view.findViewById(R.id.addOther);
 
+        totalCalories = (TextView) view.findViewById(R.id.totalCaloriesToday);
+
         // Ставим прослушку на кнопки
         addBreakfast.setOnClickListener(this);
         addLunch.setOnClickListener(this);
@@ -118,6 +124,7 @@ public class EatingFragmentsController implements View.OnClickListener {
                 breakfastContainer, lunchContainer, dinnerContainer, otherContainer
         };
 
+        calories = 0;
         /*
         Gson gson = new Gson();
         String gsonString = gson.toJson(data);
@@ -128,6 +135,8 @@ public class EatingFragmentsController implements View.OnClickListener {
         for (int i = 0; i < linearLayouts.length; i++){
             parseMap(linearLayouts[i], data.get(i), i);
         }
+
+        totalCalories.setText("Всего калорий за этот день: " + calories);
     }
 
     private void parseMap(LinearLayout layout, List<Map<String, String>> dishes, int eat){
@@ -138,9 +147,12 @@ public class EatingFragmentsController implements View.OnClickListener {
             Bundle args = new Bundle();
             args.putString("dish", map.get("dish"));
             args.putString("mass", map.get("mass"));
-            args.putString("calories", map.get("calories"));
+            String c = map.get("calories");
+            calories += Integer.parseInt(c);
+            args.putString("calories", c);
             args.putInt("id", Integer.parseInt(map.get("id")));
             createFragment(layout.getId(), eat, args);
         }
+
     }
 }

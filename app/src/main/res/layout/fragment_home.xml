@@ -23,6 +23,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:id="@+id/totalCaloriesToday"
+                android:text="Всего калорий за этот день: 0"
+                android:textColor="?textColor"
+                android:textSize="20sp"/>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/breakfast"
                 android:layout_width="match_parent"

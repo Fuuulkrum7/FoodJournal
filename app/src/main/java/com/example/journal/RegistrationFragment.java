@@ -1,6 +1,8 @@
 package com.example.journal;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import com.example.journal.ui.settings.SettingsFragment;
 
 public class RegistrationFragment extends Fragment implements View.OnClickListener {
     Button registrate;
@@ -139,6 +143,15 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             try {
                 addUser.join();
                 if (addUser.success){
+                    SharedPreferences settings = getActivity().getSharedPreferences(SettingsFragment.APP_PREFERENCES, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = settings.edit();
+
+                    editor.putBoolean(
+                            SettingsFragment.APP_PREFERENCES_SYNCHRONIZATION,
+                            true
+                    );
+                    editor.apply();
+
                     RemoteDatabaseInterface remoteDatabaseInterface = new RemoteDatabaseInterface();
                     RemoteDatabaseInterface.AddRemoteUser thread = remoteDatabaseInterface.addUser(loginText, passwordText, name);
 
@@ -153,11 +166,16 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                getActivity().onBackPressed();
+                                getActivity().finish();
                             }
                         });
                     }
                     else {
+                        editor.putBoolean(
+                                SettingsFragment.APP_PREFERENCES_SYNCHRONIZATION,
+                                false
+                        );
+                        editor.apply();
                         databaseInterface.deleteUsers();
 
                         String text = "Не удалось добавить пользователя";

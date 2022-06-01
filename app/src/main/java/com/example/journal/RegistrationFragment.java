@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -134,14 +135,38 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                 addUser.join();
                 if (addUser.success){
                     RemoteDatabaseInterface remoteDatabaseInterface = new RemoteDatabaseInterface();
-                    remoteDatabaseInterface.addUser(loginText, passwordText, name);
+                    RemoteDatabaseInterface.AddRemoteUser thread = remoteDatabaseInterface.addUser(loginText, passwordText, name);
 
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            getActivity().onBackPressed();
-                        }
-                    });
+                    thread.join();
+
+                    int id = thread.getUserId();
+                    DatabaseInterface databaseInterface = new DatabaseInterface(getContext());
+
+                    if (id > 0){
+                        databaseInterface.addUserId(id);
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                getActivity().onBackPressed();
+                            }
+                        });
+                    }
+                    else {
+                        databaseInterface.deleteUsers();
+
+                        String text = "Не удалось добавить пользователя";
+                        if (id == -2)
+                            text = "Пользовтель уже существует";
+
+                        String finalText = text;
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), finalText, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

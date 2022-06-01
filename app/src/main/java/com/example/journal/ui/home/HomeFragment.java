@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
 
         Date date1 = new Date();
         @SuppressLint("SimpleDateFormat")
-        String date = (new SimpleDateFormat("yyyy-dd-MM")).format(date1);
+        String date = (new SimpleDateFormat("yyyy-MM-dd")).format(date1);
 
         // Получаем все и вся
         controller.setData(view);

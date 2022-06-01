@@ -1,26 +1,15 @@
 package com.example.journal;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RemoteDatabaseInterface {
     public static final String LINK = "http://f0653156.xsph.ru";
@@ -28,62 +17,76 @@ public class RemoteDatabaseInterface {
     public static final String LOGIN_FIELD = "login";
     public static final String PASSWORD_FIELD = "password";
 
-    public void addUser(String login, String password, String name) {
+    public AddRemoteUser addUser(String login, String password, String name) {
         Log.d(MainActivity.TAG, "register");
-        Thread thread = new Thread(){
-            @Override
-            public void run() {
-                try {
-                    URL requestUrl = new URL(LINK + "/add_user.php");
-                    HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
-                    connection.setDoOutput(true);
-                    connection.setRequestMethod("POST");
-                    connection.setRequestProperty("Accept-Charset", "UTF-8");
-                    connection.setReadTimeout(10000);
-                    connection.setConnectTimeout(15000);
-                    try
-                    {
-                        connection.connect();
-                        DataOutputStream stream = new DataOutputStream(connection.getOutputStream());
-                        String json = String.format(
-                                "%s=%s&%s=%s&%s=%s",
-                                USERNAME_FIELD, name, LOGIN_FIELD, login, PASSWORD_FIELD, password);
-                        Log.d(MainActivity.TAG, json);
-                        stream.writeBytes(json);
-                        stream.flush();
-                        stream.close();
-                        InputStream in = new BufferedInputStream(connection.getInputStream());
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                        StringBuilder result = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            result.append(line);
-                        }
-                        int userID = 0;
-                        try
-                        {
-                            userID = Integer.parseInt(result.toString());
-                        }
-                        catch (NumberFormatException ex)
-                        {
-                            ex.printStackTrace();
-                            Log.e(MainActivity.TAG, "Bad server response.");
-                        }
-                        //Дальше, я полагаю, надо куда-то этот номер сохранить.
-                        Log.d("test", "result from server: " + result.toString());
-                    } finally {
-                        connection.disconnect();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e(MainActivity.TAG, "Failure while creating a url or working with connection.");
-                }
-            }
-        };
+        User user = new User(login, password, name);
+        AddRemoteUser thread = new AddRemoteUser(user);
         thread.start();
+
+        return thread;
     }
 
-    public void addDish(int id, String name, int mass, int calories, int eatingIndex, String date, String time, int userId)
+    class AddRemoteUser extends Thread{
+        int userID = -1;
+        User user;
+
+        public AddRemoteUser(User user) {
+            this.user = user;
+        }
+
+        @Override
+        public void run() {
+            try {
+                URL requestUrl = new URL(LINK + "/add_user.php");
+                HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Accept-Charset", "UTF-8");
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(15000);
+                try
+                {
+                    connection.connect();
+                    DataOutputStream stream = new DataOutputStream(connection.getOutputStream());
+                    String json = user.getQuery();
+                    Log.d(MainActivity.TAG, json);
+                    stream.writeBytes(json);
+                    stream.flush();
+                    stream.close();
+                    InputStream in = new BufferedInputStream(connection.getInputStream());
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+
+                    try
+                    {
+                        userID = Integer.parseInt(result.toString());
+                    }
+                    catch (NumberFormatException ex)
+                    {
+                        ex.printStackTrace();
+                        Log.e(MainActivity.TAG, "Bad server response.");
+                    }
+                    //Дальше, я полагаю, надо куда-то этот номер сохранить.
+                    Log.d("test", "result from server: " + result.toString());
+                } finally {
+                    connection.disconnect();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(MainActivity.TAG, "Failure while creating a url or working with connection.");
+            }
+        }
+
+        public int getUserId() {
+            return userID;
+        }
+    };
+
+    public void addDish(int id, String name, int mass, int calories, int eatingIndex, String date, String time)
     {
         Log.d(MainActivity.TAG, "add dish");
         Thread thread = new Thread(){
@@ -101,6 +104,14 @@ public class RemoteDatabaseInterface {
                     {
                         connection.connect();
                         DataOutputStream stream = new DataOutputStream(connection.getOutputStream());
+                        int userId = 0;
+
+                        DatabaseInterface databaseInterface = new DatabaseInterface(MainActivity.getContext());
+                        GetUserId getUserId = databaseInterface.getId();
+                        getUserId.join();
+
+                        userId = getUserId.getUId();
+
                         String json = String.format(
                                 "%s=%s&%s=%s&%s=%s&%s=%s&%s=%s&%s=%s&%s=%s&%s=%s",
                                 "local_id", id, "dish", name, "mass", mass, "calories", calories,
@@ -111,7 +122,11 @@ public class RemoteDatabaseInterface {
                         stream.close();
                         if (connection.getResponseCode() == 400) Log.e(MainActivity.TAG, "Problems with connection data.");
                         else Log.d(MainActivity.TAG, "Dish has been added successfully.");
-                    } finally {
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    finally {
                         connection.disconnect();
                     }
                 } catch (IOException e) {

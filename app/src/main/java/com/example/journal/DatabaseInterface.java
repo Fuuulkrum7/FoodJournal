@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.security.MessageDigest;
@@ -98,6 +97,48 @@ public class DatabaseInterface extends SQLiteOpenHelper {
         UpdateDish updateDish = new UpdateDish(id, db, values);
         updateDish.start();
     }
+
+    public void addUserId(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseInfo.COLUMN_USER_ID, id);
+
+        Thread thread = new Thread(){
+            public void run(){
+                db.update(
+                        DatabaseInfo.USER_TABLE,
+                        values,
+                        null,
+                        null
+                );
+                db.close();
+            }
+        };
+
+        thread.start();
+    }
+
+    public void deleteUsers(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Thread thread = new Thread(){
+            public void run(){
+                db.execSQL("delete from " + DatabaseInfo.USER_TABLE);
+                db.close();
+            }
+        };
+
+        thread.start();
+    }
+
+    public GetUserId getId(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        GetUserId getUserID = new GetUserId(db);
+
+        getUserID.start();
+        return getUserID;
+    }
+
 
     public static String getSSH512(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");

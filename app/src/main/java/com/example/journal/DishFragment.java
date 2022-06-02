@@ -75,6 +75,8 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     }
 
     protected void deleteFood(){
+        current_calories -= prevCalories;
+        allCalories.setText("Всего калорий за этот день: " + current_calories);
         if (id == -1)
             return;
         database.deleteData(id, DatabaseInfo.JOURNAL_TABLE, DatabaseInfo.COLUMN_ID);

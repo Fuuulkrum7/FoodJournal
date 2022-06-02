@@ -16,6 +16,7 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -63,10 +64,10 @@ public class HomeFragment extends Fragment {
                 controller.showButtons();
 
             @SuppressLint("DefaultLocale")
-            String current_date = String.format("%d%d.%d%d.%d",
-                    day / 10, day % 10,
+            String current_date = String.format("%d-%d%d-%d%d",
+                    year,
                     (month + 1) / 10,(month + 1) % 10,
-                    year
+                    day / 10, day % 10
             );
 
             // Выводим новые данные по выбранной дате на экран

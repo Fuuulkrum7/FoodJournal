@@ -286,5 +286,6 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         dish.setText(dishName);
         mass.setText(massData);
         calories.setText(caloriesData);
+        prevCalories = Integer.parseInt(caloriesData);
     }
 }

@@ -24,16 +24,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DishFragment extends Fragment implements View.OnClickListener {
+    // добавление блюда в бд
     Button addDish;
+    // Поля для ввода данных
     EditText mass, dish, calories;
-    DatabaseInterface database;
     int prevCalories = 0;
+    // всего калорий за день
     int current_calories = 0;
+    // Дата текущая для бд
     String date;
+    // редактируется ли наш фрагмент
     boolean change = false;
+    // Локальный идентификатор блюда в бд
     int id = -1;
+    // Можно ли редактировать блюдо
     boolean enable = true;
+    // Здесь все калории хранятся
     TextView allCalories;
+
 
     // прослушка на долгое нажатия для создания всплывающего меню
     View.OnLongClickListener listener = new View.OnLongClickListener() {
@@ -46,6 +54,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         }
     };
 
+
     // Обработка на выбор элемента из меню
     PopupMenu.OnMenuItemClickListener onMenuItemClickListener = new PopupMenu.OnMenuItemClickListener() {
         @RequiresApi(api = Build.VERSION_CODES.O)
@@ -57,6 +66,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                 case R.id.show_dustbin:
                     deleteFood();
                     return true;
+                // Если на кнопку редактирования
                 case R.id.show_pencil:
                     Log.d(MainActivity.TAG, id + "");
                     if (id == -1)
@@ -70,19 +80,29 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         }
     };
 
+
+    // Сеттер id. Да-да
     protected void setId(int id){
         this.id = id;
     }
 
+
+    // Тут удаляем еду
     protected void deleteFood(){
+        // вычитаем калории
         current_calories -= prevCalories;
         allCalories.setText("Всего калорий за этот день: " + current_calories);
         if (id == -1)
             return;
+
+        // подключаемся к бд, усе
+        DatabaseInterface database = new DatabaseInterface(getContext());
         database.deleteData(id, DatabaseInfo.JOURNAL_TABLE, DatabaseInfo.COLUMN_ID);
+
         // Это должно удалить текущий фрагмент.
         getParentFragmentManager().beginTransaction().remove(this).commit();
     }
+
 
     // Индекс выбранного времени пищи (дабы сразу при выборе его сохранять в таком виде)
     // Как-никак, в бд значение этой переменной является числом для удобства сортировки
@@ -100,7 +120,6 @@ public class DishFragment extends Fragment implements View.OnClickListener {
 
         view.setOnLongClickListener(listener);
 
-        database = new DatabaseInterface(MainActivity.getContext());
         eating_index = getArguments().getInt("eating");
         date = getArguments().getString("date");
 
@@ -216,6 +235,8 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                 // Добавляем блюдо в бд
                 // Здесь будут данные для добавления в бд
                 ContentValues values = getValues();
+
+                DatabaseInterface database = new DatabaseInterface(getContext());
 
                 if (change){
                     database.updateData(id, values);

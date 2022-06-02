@@ -27,12 +27,13 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     Button addDish;
     EditText mass, dish, calories;
     DatabaseInterface database;
+    int prevCalories = 0;
     int current_calories = 0;
     String date;
     boolean change = false;
     int id = -1;
     boolean enable = true;
-    EatingFragmentsController controller;
+    TextView allCalories;
 
     // прослушка на долгое нажатия для создания всплывающего меню
     View.OnLongClickListener listener = new View.OnLongClickListener() {
@@ -165,13 +166,13 @@ public class DishFragment extends Fragment implements View.OnClickListener {
 
 
     private ContentValues getValues(){
-        controller.calories -= current_calories;
         // Получаем выбранное блюдо и массу в качестве строки
         String current_dish = dish.getText().toString(),
                 s_mass = mass.getText().toString(),
                 s_calories = calories.getText().toString();
 
-        current_calories = Integer.parseInt(s_calories);
+        current_calories -= prevCalories;
+        prevCalories = Integer.parseInt(s_calories);
         // Здесь получаем текущее время
         Date date1 = new Date();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
@@ -180,18 +181,19 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         ContentValues values = new ContentValues();
         values.put(DatabaseInfo.COLUMN_DISH, current_dish);
         values.put(DatabaseInfo.COLUMN_MASS, Integer.parseInt(s_mass));
-        values.put(DatabaseInfo.COLUMN_CALORIES, current_calories);
+        values.put(DatabaseInfo.COLUMN_CALORIES, prevCalories);
         values.put(DatabaseInfo.COLUMN_TIME, time);
 
-        controller.calories += current_calories;
-        controller.updateCalories();
+        current_calories += prevCalories;
+        allCalories.setText("Всего калорий за этот день: " + current_calories);
 
         return values;
     }
 
 
-    public void setParent(EatingFragmentsController controller){
-        this.controller = controller;
+    public void setParent(TextView allCalories, int current_calories){
+        this.allCalories = allCalories;
+        this.current_calories = current_calories;
     }
 
 

@@ -112,7 +112,7 @@ public class EatingFragmentsController implements View.OnClickListener {
     // Дефолтный способ создания контейнера для блюда, без аргументов
     private DishFragment createFragment(int layout, int eating){
         DishFragment fragment = DishFragment.newInstance(eating, date);
-        fragment.setParent(this);
+        fragment.setParent(totalCalories, calories);
         FragmentTransaction ft = activity.getChildFragmentManager().beginTransaction();
         ft.add(layout, fragment);
         ft.commit();

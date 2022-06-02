@@ -27,10 +27,12 @@ public class DishFragment extends Fragment implements View.OnClickListener {
     Button addDish;
     EditText mass, dish, calories;
     DatabaseInterface database;
+    int current_calories = 0;
     String date;
     boolean change = false;
     int id = -1;
     boolean enable = true;
+    EatingFragmentsController controller;
 
     // прослушка на долгое нажатия для создания всплывающего меню
     View.OnLongClickListener listener = new View.OnLongClickListener() {
@@ -163,11 +165,13 @@ public class DishFragment extends Fragment implements View.OnClickListener {
 
 
     private ContentValues getValues(){
+        controller.calories -= current_calories;
         // Получаем выбранное блюдо и массу в качестве строки
         String current_dish = dish.getText().toString(),
                 s_mass = mass.getText().toString(),
                 s_calories = calories.getText().toString();
 
+        current_calories = Integer.parseInt(s_calories);
         // Здесь получаем текущее время
         Date date1 = new Date();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
@@ -176,10 +180,18 @@ public class DishFragment extends Fragment implements View.OnClickListener {
         ContentValues values = new ContentValues();
         values.put(DatabaseInfo.COLUMN_DISH, current_dish);
         values.put(DatabaseInfo.COLUMN_MASS, Integer.parseInt(s_mass));
-        values.put(DatabaseInfo.COLUMN_CALORIES, Integer.parseInt(s_calories));
+        values.put(DatabaseInfo.COLUMN_CALORIES, current_calories);
         values.put(DatabaseInfo.COLUMN_TIME, time);
 
+        controller.calories += current_calories;
+        controller.updateCalories();
+
         return values;
+    }
+
+
+    public void setParent(EatingFragmentsController controller){
+        this.controller = controller;
     }
 
 
@@ -200,6 +212,7 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                 // Добавляем блюдо в бд
                 // Здесь будут данные для добавления в бд
                 ContentValues values = getValues();
+
                 if (change){
                     database.updateData(id, values);
                 }
@@ -208,8 +221,6 @@ public class DishFragment extends Fragment implements View.OnClickListener {
                     values.put(DatabaseInfo.COLUMN_DATE, date);
 
                     database.addDish(values, this);
-
-
                 }
 
                 change = false;

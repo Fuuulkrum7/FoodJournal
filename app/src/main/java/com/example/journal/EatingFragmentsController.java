@@ -112,6 +112,7 @@ public class EatingFragmentsController implements View.OnClickListener {
     // Дефолтный способ создания контейнера для блюда, без аргументов
     private DishFragment createFragment(int layout, int eating){
         DishFragment fragment = DishFragment.newInstance(eating, date);
+        fragment.setParent(this);
         FragmentTransaction ft = activity.getChildFragmentManager().beginTransaction();
         ft.add(layout, fragment);
         ft.commit();
@@ -135,7 +136,10 @@ public class EatingFragmentsController implements View.OnClickListener {
         for (int i = 0; i < linearLayouts.length; i++){
             parseMap(linearLayouts[i], data.get(i), i);
         }
+        updateCalories();
+    }
 
+    public void updateCalories(){
         totalCalories.setText("Всего калорий за этот день: " + calories);
     }
 

@@ -18,8 +18,10 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.journal.AlarmPermissionHelper;
 import com.example.journal.AlarmReceiver;
 import com.example.journal.FoodTimer;
 import com.example.journal.JournalNotificationService;
@@ -29,6 +31,7 @@ import com.example.journal.R;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SettingsFragment extends Fragment {
     // это будет именем файла настроек
@@ -45,24 +48,23 @@ public class SettingsFragment extends Fragment {
     SharedPreferences settings;
     FoodTimer[] times = new FoodTimer[3];
 
+    private AlarmPermissionHelper alarmHelper;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         // Данные про настройки, собсна
-        settings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        settings = Objects.requireNonNull(getActivity()).getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         // Получаем переключатель
-        need_to_remind = (SwitchMaterial) view.findViewById(R.id.Reminder);
-        synchronization = (SwitchMaterial) view.findViewById(R.id.Synchronization);
+        need_to_remind = view.findViewById(R.id.Reminder);
+        synchronization = view.findViewById(R.id.Synchronization);
 
-        synchronization.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (synchronization.isChecked()){
-                    Intent intent = new Intent(getContext(), LoginFragment.class);
-                    startActivity(intent);
-                }
+        synchronization.setOnClickListener(v -> {
+            if (synchronization.isChecked()){
+                Intent intent = new Intent(getContext(), LoginFragment.class);
+                startActivity(intent);
             }
         });
 
@@ -79,17 +81,26 @@ public class SettingsFragment extends Fragment {
                 // Если надо напоминалку
                 if (isChecked)  {
                     // Отображаем всю инфу с будильниками недоделанными
-                    startNotificationService();
-                    showTimers();
+                    alarmHelper.ensurePermission(() -> {
+                        startNotificationService();
+                        showTimers();
+                    });
                 }
                 else {
                     // Прячем
-                    LinearLayout layout = (LinearLayout) getView().findViewById(R.id.Timers);
+                    LinearLayout layout = Objects.requireNonNull(getView()).findViewById(R.id.Timers);
                     removeNotifications(layout.getChildCount());
                     layout.removeAllViews();
                 }
             }
         });
+
+        FragmentActivity activity = requireActivity();
+        alarmHelper = new AlarmPermissionHelper(
+            activity,
+            activity.getActivityResultRegistry(),
+            this
+        );
 
         return view;
     }
@@ -97,7 +108,7 @@ public class SettingsFragment extends Fragment {
     @SuppressLint("UnspecifiedImmutableFlag")
     public void removeNotifications(int len){
         for (int i = 0; i < len; i++){
-            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            AlarmManager alarmManager = (AlarmManager) Objects.requireNonNull(getActivity()).getSystemService(Context.ALARM_SERVICE);
 
             Intent intent1 = new Intent(getContext(), AlarmReceiver.class);
 
@@ -105,7 +116,7 @@ public class SettingsFragment extends Fragment {
                     getContext(),
                     i,
                     intent1,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT  | PendingIntent.FLAG_IMMUTABLE);
 
             alarmManager.cancel(pendingIntent);
         }
@@ -115,7 +126,7 @@ public class SettingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        int a = ((LinearLayout) getView().findViewById(R.id.Timers)).getChildCount();
+        int a = ((LinearLayout) Objects.requireNonNull(getView()).findViewById(R.id.Timers)).getChildCount();
 
         if (need_to_remind.isChecked() && a == 0)
             showTimers();
@@ -151,16 +162,14 @@ public class SettingsFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void startNotificationService(){
-        // Сохраняем все и вся
+    public void startNotificationService() {
         ArrayList<Integer> allTimes = new ArrayList<>();
-        for (int i = 0; i < APP_PREFERENCES_TIMES.length; i++){
+        for (int i = 0; i < APP_PREFERENCES_TIMES.length; i++) {
             FoodTimer fragment = times[i];
             boolean notifyUser;
             try {
                 notifyUser = fragment.need_timer.isChecked();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 return;
             }
 
@@ -168,17 +177,21 @@ public class SettingsFragment extends Fragment {
             int hour = Integer.parseInt(timer[0]);
             int minute = Integer.parseInt(timer[1]);
 
-
-            if (notifyUser){
+            if (notifyUser) {
                 allTimes.add(hour * 60 + minute);
             }
         }
 
-        Log.d(MainActivity.TAG, "running service...");
-        Intent serviceIntent = new Intent(getContext(), JournalNotificationService.class);
-        serviceIntent.putExtra("times", allTimes);
+        if (allTimes.isEmpty()) return;
 
-        getActivity().stopService(new Intent(getActivity(), JournalNotificationService.class));
-        getActivity().startService(serviceIntent);
+        alarmHelper.ensurePermission(() -> {
+            Log.d(MainActivity.TAG, "running service...");
+            Intent serviceIntent = new Intent(getContext(), JournalNotificationService.class);
+            serviceIntent.putExtra("times", allTimes);
+
+            Context context = requireContext();
+            context.stopService(new Intent(context, JournalNotificationService.class));
+            context.startService(serviceIntent);
+        });
     }
 }

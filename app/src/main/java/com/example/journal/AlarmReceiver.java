@@ -18,8 +18,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
-        int id = 1;
+        int id = intent.getIntExtra("notification_id", (int) System.currentTimeMillis());
         String channelID = context.getString(R.string.channel_id);
+
         NotificationChannel notificationChannel = new NotificationChannel(
                 channelID,
                 context.getString(R.string.channel_name),
@@ -34,7 +35,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context,
                 0, notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setSmallIcon(R.drawable.notebook)
@@ -46,9 +47,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentIntent(contentIntent)
                 .setAutoCancel(true);
 
-        NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(context);
-        notificationManager.createNotificationChannel(notificationChannel);
-        notificationManager.notify(id, builder.build());
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(notificationChannel);
+            notificationManager.notify(id, builder.build());
+        }
     }
 }

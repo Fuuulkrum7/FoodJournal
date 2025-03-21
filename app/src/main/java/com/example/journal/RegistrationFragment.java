@@ -38,9 +38,9 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.registration_fragment, container, false);
 
-        username = (EditText) view.findViewById(R.id.username_reg);
-        password = (EditText) view.findViewById(R.id.password_reg);
-        login = (EditText) view.findViewById(R.id.login_reg);
+        username = view.findViewById(R.id.username_reg);
+        password = view.findViewById(R.id.password_reg);
+        login = view.findViewById(R.id.login_reg);
 
         login.addTextChangedListener(new TextWatcher() {
 
@@ -87,7 +87,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             public void afterTextChanged(Editable s) {}
         });
 
-        registrate = (Button) view.findViewById(R.id.registration_reg);
+        registrate = view.findViewById(R.id.registration_reg);
         registrate.setOnClickListener(this);
         registrate.setEnabled(false);
 
@@ -136,12 +136,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                     RemoteDatabaseInterface remoteDatabaseInterface = new RemoteDatabaseInterface();
                     remoteDatabaseInterface.addUser(loginText, passwordText, name);
 
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            getActivity().onBackPressed();
-                        }
-                    });
+                    new Handler(Looper.getMainLooper()).post(() -> getActivity().onBackPressed());
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
